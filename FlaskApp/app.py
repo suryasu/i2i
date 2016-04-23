@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, json, request
+=======
+from flask import Flask, render_template
+>>>>>>> d0703d6ee5bd87c162b90d54635fa24dc4f4e621
 app = Flask(__name__)
 
 @app.route("/")
