@@ -1,13 +1,13 @@
 from flask import Flask, render_template, json, request
-from flask.ext.mysqldb import MySQL
-	
+from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
+
+mysql = MySQL()
 app = Flask(__name__)
-mysql = MySQL(app)
  
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'jay'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'jay'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -34,20 +34,21 @@ def signUp():
  
     # validate the received values
     if _name and _email and _password:
+        # return json.dumps({'html':'<span>All fields good !!</span>'})
         conn = mysql.connect()
+        print "hi"
         cursor = conn.cursor()
-        # _hashed_password = generate_password_hash(_password)
-        # cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
+        _hashed_password = generate_password_hash(_password)
+        cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
         
-        # data = cursor.fetchall()
+        data = cursor.fetchall()
  
-        # if len(data) is 0:
-            # conn.commit()
-            # return json.dumps({'message':'User created successfully !'})
-        # else:
-            # return json.dumps({'error':str(data[0])})
+        if len(data) is 0:
+            conn.commit()
+            return json.dumps({'message':'User created successfully !'})
+        else:
+            return json.dumps({'error':str(data[0])})
             
-        return json.dumps({'html':'<span>All fields good !!</span>'})
         
 
     else:
@@ -65,6 +66,6 @@ def createProject():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5002,debug=True)
     
     
