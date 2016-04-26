@@ -6,9 +6,9 @@ app = Flask(__name__)
 mysql = MySQL(app)
  
 # MySQL configurations
-app.config['MYSQL_DATABASE_USER'] = 'jay'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'jay'
-app.config['MYSQL_DATABASE_DB'] = 'BucketList'
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
@@ -34,8 +34,11 @@ def signUp():
  
     # validate the received values
     if _name and _email and _password:
-        conn = mysql.connect()
-        cursor = conn.cursor()
+        #conn = mysql.connect()
+        #cursor = conn.cursor()
+        
+        cur = mysql.connection.cursor()
+        
         # _hashed_password = generate_password_hash(_password)
         # cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
         
@@ -65,6 +68,6 @@ def createProject():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
     
     
