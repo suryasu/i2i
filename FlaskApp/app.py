@@ -35,21 +35,11 @@ def signUp():
  
     # validate the received values
     if _name and _email and _password:
-<<<<<<< HEAD
-        #conn = mysql.connect()
-        #cursor = conn.cursor()
-        
-        cur = mysql.connection.cursor()
-        
-        # _hashed_password = generate_password_hash(_password)
-        # cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
-=======
-        # return json.dumps({'html':'<span>All fields good !!</span>'})
+
         conn = mysql.connect()
         cursor = conn.cursor()
         _hashed_password = generate_password_hash(_password)
         cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
->>>>>>> c57fdae6b4ac185c8e19b873cefaa12b0b9cff62
         
         data = cursor.fetchall()
  
@@ -122,14 +112,13 @@ def projectHome():
 @app.route('/createProject')
 def createProject():
     return render_template('createproject.html')
-    
+
+@app.route('/findProjects')
+def findProjects():
+    return render_template('findProjects.html')   
 
 
 if __name__ == "__main__":
-<<<<<<< HEAD
     app.run(debug=True)
-=======
-    app.run(debug = True)
->>>>>>> c57fdae6b4ac185c8e19b873cefaa12b0b9cff62
     
     

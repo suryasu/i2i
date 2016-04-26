@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Create a Project</title>
+    <title>I2I | Create a Project</title>
  
     
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,9 +21,9 @@
       <div class="header">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" ><a href="main">Home</a></li>
-            <li role="presentation"><a href="#">Sign In</a></li>
-            <li role="presentation" class="active"><a href="#">Sign Up</a></li>
+            <li role="presentation" ><a href="/">Home</a></li>
+            <li role="presentation"><a href="/userHome">User</a></li>
+            <li role="presentation"><a href="/logout">Logout</a>
           </ul>
         </nav>
         <h3 class="text-muted">Create a Project</h3>
@@ -81,8 +81,15 @@
         </div>
        
         
-        
-        <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Project Description" required autofocus>
+        <!-- 
+        <input type="email" name="inputEmail" id="inputEmail" class="form-control" placeholder="Project Description" required autofocus> -->
+        <div class="form-horizontal">
+          <div class="form-group">
+            <div class="col-md-6">
+              <textarea class="form-control" rows="3" placeholder="Project Description" required></textarea>
+            </div>
+          </div>
+        </div>
         <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Tags" required>
          
         <button id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Launch Project</button>
