@@ -67,4 +67,14 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+#dropdownMenu1{
+ width:150px;  
+ position: relative;
+}
+
+#dropdownMenu2{  
+ position: relative;
+}
+
+.dropdownMenu3 { width: 1010px; margin-top: 20px; margin-left: auto; margin-right: auto; }
 </style>

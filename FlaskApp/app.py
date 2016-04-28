@@ -9,7 +9,7 @@ app.secret_key = 'why would I tell you my secret key?'
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
-app.config['MYSQL_DATABASE_DB'] = 'BucketList'
+app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
@@ -48,7 +48,6 @@ def signUp():
             return json.dumps({'message':'User created successfully !'})
         else:
             return json.dumps({'error':str(data[0])})
-            
         
 
     else:
