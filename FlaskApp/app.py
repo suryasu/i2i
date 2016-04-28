@@ -111,7 +111,10 @@ def projectHome():
 
 @app.route('/createProject')
 def createProject():
-    return render_template('createproject.html')
+    if session.get('user'):
+        return render_template('createproject.html')
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
 
 @app.route('/findProjects')
 def findProjects():
