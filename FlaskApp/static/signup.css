@@ -37,3 +37,10 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.jumbotron {
+    background-color:transparent !important; 
+}
+.row.marketing {
+  margin-left: 170px;
+}
