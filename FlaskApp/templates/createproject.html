@@ -62,67 +62,51 @@ body {
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="txtTitle"></label>
                         <div class="col-md-5">
-                            <div class="dropdown">
-                              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Category
-                                <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="#">Art/Design</a></li>
-                                <li><a href="#">Communication</a></li>
-                                <li><a href="#">Education</a></li>
-                                <li><a href="#">Fashion</a></li>
-                                <li><a href="#">Food</a></li>
-                                <li><a href="#">Games</a></li>
-                                <li><a href="#">Mobile</a></li>
-                                <li><a href="#">Music</a></li>
-                                <li><a href="#">Science</a></li>
-                                <li><a href="#">Tools</a></li>
-                              </ul>
-                            </div>
+                            <select class="form-control">
+                                <option selected disabled>Category</option>
+                                <option value="one">Art/Design</option>
+                                <option value="two">Communication</option>
+                                <option value="three">Education</option>
+                                <option value="four">Fashion</option>
+                                <option value="five">Food</option>
+                                <option value="six">Games</option>
+                                <option value="seven">Mobile</option>
+                                <option value="eight">Music</option>
+                                <option value="nine">Science</option>
+                                <option value="ten">Tools</option>
+                            </select>
+                            <select class="form-control">
+                                <option selected disabled>Expected Completion Time</option>
+                                <option value="one">1 - 3 months</option>
+                                <option value="two">3 - 6 months</option>
+                                <option value="three">6 - 12 months</option>
+                                <option value="four">> 1 year</option>
+                            </select>
+                            <select class="form-control">
+                                <option selected disabled>Desired Number of Collaborators</option>
+                                <option value="one">1 - 5</option>
+                                <option value="two">5 - 10</option>
+                                <option value="three">10 - 50</option>
+                                <option value="four">50 - 100</option>
+                                <option value="five">Unlimited</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="txtTitle"></label>
-                        <div class="col-md-5">
-                            <div class="dropdown">
-                              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Expected Completion Time
-                                <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="#">1 - 3 months</a></li>
-                                <li><a href="#">3 - 6 months </a></li>
-                                <li><a href="#">6 - 12 months</a></li>
-                                <li><a href="#">> 1 year</a></li>
-                              </ul>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="txtTitle"></label>
-                        <div class="col-md-5">
-                            <div class="dropdown">
-                              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                Desired Number of Collaborators
-                                <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="#">1 - 5</a></li>
-                                <li><a href="#">5 - 10</a></li>
-                                <li><a href="#">10 - 50</a></li>
-                                <li><a href="#"> 50 - 100</a></li>
-                                <li><a href="#"> Unlimited </a></li>
-                              </ul>
-                            </div>
-                        </div>
                     </div>
+  
                     <!-- Textarea -->
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="txtPost"></label>
                         <div class="col-sm-6">
                             <textarea class="form-control" id="txtPost" name="inputDescription" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="txtPost"></label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="txtPost" name="inputDescription" placeholder="Project Tags"></textarea>
                         </div>
                     </div>
  
@@ -133,6 +117,9 @@ body {
                             <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Publish" />
                         </div>
                     </div>
+
+
+
  
                 </fieldset>
             </form>
