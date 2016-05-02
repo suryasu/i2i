@@ -45,7 +45,7 @@ body {
         </div>
 
         <section>
-            <form class="form-horizontal" method="post" action="/addWish">
+            <form class="form-horizontal" method="post" action="/addProject">
                 <fieldset>
  
                     <!-- Form Name -->
@@ -62,33 +62,33 @@ body {
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="txtTitle"></label>
                         <div class="col-md-5">
-                            <select class="form-control">
+                            <select class="form-control" name="inputCategory">
                                 <option selected disabled>Category</option>
-                                <option value="one">Art/Design</option>
-                                <option value="two">Communication</option>
-                                <option value="three">Education</option>
-                                <option value="four">Fashion</option>
-                                <option value="five">Food</option>
-                                <option value="six">Games</option>
-                                <option value="seven">Mobile</option>
-                                <option value="eight">Music</option>
-                                <option value="nine">Science</option>
-                                <option value="ten">Tools</option>
+                                <option value="Art/Design">Art/Design</option>
+                                <option value="Communication">Communication</option>
+                                <option value="Education">Education</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Food">Food</option>
+                                <option value="Games">Games</option>
+                                <option value="Mobile">Mobile</option>
+                                <option value="Music">Music</option>
+                                <option value="Science">Science</option>
+                                <option value="Tools">Tools</option>
                             </select>
-                            <select class="form-control">
+                            <select class="form-control" name="inputCompleteTime">
                                 <option selected disabled>Expected Completion Time</option>
-                                <option value="one">1 - 3 months</option>
-                                <option value="two">3 - 6 months</option>
-                                <option value="three">6 - 12 months</option>
-                                <option value="four">> 1 year</option>
+                                <option value="1 - 3 months">1 - 3 months</option>
+                                <option value="3 - 6 months">3 - 6 months</option>
+                                <option value="6 - 12 months">6 - 12 months</option>
+                                <option value="> 1 year">> 1 year</option>
                             </select>
-                            <select class="form-control">
+                            <select class="form-control" name="inputCollaborators">
                                 <option selected disabled>Desired Number of Collaborators</option>
-                                <option value="one">1 - 5</option>
-                                <option value="two">5 - 10</option>
-                                <option value="three">10 - 50</option>
-                                <option value="four">50 - 100</option>
-                                <option value="five">Unlimited</option>
+                                <option value="1 - 5">1 - 5</option>
+                                <option value="5 - 10">5 - 10</option>
+                                <option value="10 - 50">10 - 50</option>
+                                <option value="50 - 100">50 - 100</option>
+                                <option value="Unlimited">Unlimited</option>
                             </select>
                         </div>
 
@@ -106,7 +106,7 @@ body {
                     <div class="form-group">
                         <label class="col-sm-3 control-label" for="txtPost"></label>
                         <div class="col-sm-6">
-                            <textarea class="form-control" id="txtPost" name="inputDescription" placeholder="Project Tags"></textarea>
+                            <textarea class="form-control" id="txtPost" name="inputTags" placeholder="Project Tags"></textarea>
                         </div>
                     </div>
  
