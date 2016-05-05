@@ -178,7 +178,8 @@ def getMyProjects():
                         'NumCollaborators': proj[4],
                         'Description': proj[5],
                         'Tags': proj[6],
-                        'Date': proj[7]}
+                        'Date': proj[7],
+                        'Creator': _user}
                 projects_dict.append(proj_dict)
  
             return json.dumps(projects_dict)
@@ -190,6 +191,10 @@ def getMyProjects():
 @app.route('/findProjects')
 def findProjects():
     return render_template('findProjects.html')   
+
+@app.route('/myProjects')
+def myProjects():
+    return render_template('myProjects.html')   
 
 @app.route('/signUpSuccess')
 def signUpSuccess():
