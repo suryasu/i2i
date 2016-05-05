@@ -1,4 +1,4 @@
-from flask import Flask, render_template, json, request, redirect, session
+from flask import Flask, render_template, json, request, redirect, session, jsonify
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
 
@@ -8,7 +8,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -31,7 +31,6 @@ def signUp():
     _name = request.form['inputName']
     _email = request.form['inputEmail']
     _password = request.form['inputPassword']
-    print _name
  
     # validate the received values
     if _name and _email and _password:
@@ -45,9 +44,14 @@ def signUp():
  
         if len(data) is 0:
             conn.commit()
-            return json.dumps({'message':'User created successfully !'})
+            # return redirect('/')
+            return render_template('signUpSuccess.html')
+            # return json.dumps({'message':'User created successfully !'})
         else:
-            return json.dumps({'error':str(data[0])})
+            return redirect('/')
+            # return render_template('index.html')
+            return render_template('signUpFailure.html')
+            # return json.dumps({'error':str(data[0])})
         
 
     else:
@@ -115,9 +119,89 @@ def createProject():
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
+@app.route('/addProject', methods=['POST'])
+def addProject():
+    try:
+        if session.get('user'):
+            _title = request.form['inputTitle']
+            _category = request.form['inputCategory']
+            _completion_time = request.form['inputCompleteTime']
+            _num_collaborators = request.form['inputCollaborators']
+            _description = request.form['inputDescription']
+            _tags = request.form['inputTags']
+            _user = session.get('user')
+
+            print _title
+            print _category
+            print _completion_time
+            print _num_collaborators
+            print _description
+            print _tags
+ 
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addProject',(_title, _category, _completion_time, _num_collaborators, _description, _tags, _user))
+            data = cursor.fetchall()
+ 
+            if len(data) is 0:
+                conn.commit()
+                return redirect('/userHome')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+ 
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@app.route('/getMyProjects')
+def getMyProjects():
+    try:
+        if session.get('user'):
+            _user = session.get('user')
+ 
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetProjByUser',(_user,))
+            myprojects = cursor.fetchall()
+ 
+            projects_dict = []
+            for proj in myprojects:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'Date': proj[7]}
+                projects_dict.append(proj_dict)
+ 
+            return json.dumps(projects_dict)
+        else:
+            return render_template('error.html', error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/findProjects')
 def findProjects():
     return render_template('findProjects.html')   
+
+@app.route('/signUpSuccess')
+def signUpSuccess():
+    print "beyy"
+    return render_template('signUpSuccess.html')   
+
+
+@app.route('/signUpFailure')
+def signUpFailure():
+    print "eyy"
+    return render_template('signUpFailure.html')  
+
 
 
 if __name__ == "__main__":
