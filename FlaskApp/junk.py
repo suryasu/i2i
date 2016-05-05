@@ -21,3 +21,5 @@ application = linkedin.LinkedInApplication(token="AQU32GSIYKLneFIfXbEzYk7dSeYq\
 J8pI4T0OC1nkCWhVdSr_UVbJ5NjuiGkSmcAaBGrP9KyYc0v2cv0Jk5mxaMCxSyT6dDR0QeVX5cQ43Oi\
 FRu6x1uRBUXQNVMWy8iXQmtT-nH63DbqPKdq_kfi24sdnu0kbc_P0j-zIWCIkjhMani18ryk")
 #application.search_profile(selectors=[{'people': ['first-name', 'last-name']}], params={'keywords': 'apple microsoft'})
+
+print application.get_profile()
