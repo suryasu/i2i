@@ -1,7 +1,7 @@
 from linkedin import linkedin
 
-API_KEY = '750xw4xmip7wuc'
-API_SECRET = 'TZObH1Nr46dMZbJz'
+API_KEY = 'key'
+API_SECRET = 'secret'
 RETURN_URL = 'http://localhost:8000'
 
 authentication = linkedin.LinkedInAuthentication(API_KEY, API_SECRET, RETURN_URL)
