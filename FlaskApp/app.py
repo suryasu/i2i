@@ -1,6 +1,8 @@
 from flask import Flask, render_template, json, request, redirect, session, jsonify
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
+import os
+import uuid
 
 mysql = MySQL()
 app = Flask(__name__)
@@ -8,17 +10,28 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
+app.config['UPLOAD_FOLDER'] = 'static/Uploads'
 
 
 @app.route("/")
 def main():
     #return "Welcome to I2I NOOB!"
     return render_template('index.html')
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        extension = os.path.splitext(file.filename)[1]
+        f_name = str(uuid.uuid4()) + extension
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+        return json.dumps({'filename':f_name})
 
 @app.route('/showSignUp')
 def showSignUp():
@@ -131,6 +144,11 @@ def addProject():
             _tags = request.form['inputTags']
             _user = session.get('user')
 
+            if request.form.get('filePath') is None:
+                _filePath = ''
+            else:
+                _filePath = request.form.get('filePath')
+
             print _title
             print _category
             print _completion_time
@@ -140,7 +158,7 @@ def addProject():
  
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_addProject',(_title, _category, _completion_time, _num_collaborators, _description, _tags, _user))
+            cursor.callproc('sp_addProject',(_title, _category, _completion_time, _num_collaborators, _description, _tags, _user, _filePath))
             data = cursor.fetchall()
  
             if len(data) is 0:

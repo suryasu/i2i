@@ -13,9 +13,39 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <script src="../static/js/jquery-1.12.3.min.js"></script>
+
+    <script src="../static/js/jquery.ui.widget.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload-ui.js"></script>
+
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     
- 
+         <script>
+        $(function() {
+            $('#fileupload').fileupload({
+                url: 'upload',
+                dataType: 'json',
+                add: function(e, data) {
+                    data.submit();
+                },
+                success: function(response, status) {
+                    var filePath = 'static/Uploads/' + response.filename;
+                    $('#imgUpload').attr('src',filePath);
+                    $('#filePath').val(filePath);
+                    console.log(response);
+                },
+                 error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
+        </script>
  
 </head>
  
@@ -109,6 +139,22 @@ body {
                             <textarea class="form-control" id="txtPost" name="inputTags" placeholder="Project Tags"></textarea>
                         </div>
                     </div>
+
+<div class="form-group">
+  <label for="txtPost">Photos</label>
+                     
+<div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
+                    </span>
+                </span>
+        <div class="pull-right">
+                <img  id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail"><input type="hidden" name="filePath" id="filePath"></input>
+        </div>
+            </div>
+  
+</div>
  
                     <!-- Button -->
                     <div class="form-group">
