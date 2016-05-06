@@ -27,18 +27,18 @@
                         if(itemsPerRow<3){
                             console.log(i);
                             if(i==data.length-1){
-                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath));
+                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
                                 $('.well').append(div);
                             }
                             else{
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath));
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
                             itemsPerRow++;
                             }
                         }
                         else{
                             $('.well').append(div);
                             div = $('<div>').attr('class','row');
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath));
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
                             if(i==data.length-1){
                                 $('.well').append(div);
                             }
@@ -67,30 +67,46 @@
             });
         })
         function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like){
-            var mainDiv = $('<div>').attr('class','col-sm-4 col-md-4');
-            var thumbNail = $('<div>').attr('class','thumbnail');
-            var img = $('<img>').attr({'src':filepath,'data-holder-rendered':true,'style':'height: 150px; width: 150px; display: block'});
-            var caption = $('<div>').attr('class','caption');
+            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
+            var thumbNail = $('<div>').attr('class', 'thumbnail');
+            var img = $('<img>').attr({
+                'src': filepath,
+                'data-holder-rendered': true,
+                'style': 'height: 150px; width: 150px; display: block'
+            });
+            var caption = $('<div>').attr('class', 'caption');
             var title = $('<h3>').text(title);
             var desc = $('<p>').text(desc);
-            
+ 
+ 
             var p = $('<p>');
-            var btn = $('<button>').attr({'id':'btn_'+id,'type':'button','class':'btn btn-danger btn-sm'});
-            var span = $('<span>').attr({'class':'glyphicon glyphicon-thumbs-up','aria-hidden':'true'});
-            
+            var btn = $('<button>').attr({
+                'id': 'btn_' + id,
+                'type': 'button',
+                'class': 'btn btn-danger btn-sm'
+            });
+            var span = $('<span>').attr({
+                'class': 'glyphicon glyphicon-thumbs-up',
+                'aria-hidden': 'true'
+            });
+ 
+            var likeSpan = $('<span>').attr('aria-hidden', 'true').html('&nbsp;' + like + ' like(s)');
+ 
             p.append(btn.append(span));
-            
-            
-            
+            p.append(likeSpan);
+ 
+ 
             caption.append(title);
             caption.append(desc);
             caption.append(p);
+ 
             thumbNail.append(img);
             thumbNail.append(caption);
             mainDiv.append(thumbNail);
             return mainDiv;
-            
-        }
+ 
+ 
+}
     </script>
 
     <style>
@@ -124,8 +140,8 @@
             <nav>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" ><a href="/">Home</a></li>
-                    <li role="presentation"><a href="/showSignin">Sign In</a></li>
-                    <li role="presentation"><a href="showSignUp">Sign Up</a>
+                    <li role="presentation"><a href="/userHome">User</a></li>
+                    <li role="presentation"><a href="/logout">Logout</a></li>
                     </li>
                 </ul>
             </nav>

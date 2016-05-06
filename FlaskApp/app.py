@@ -228,7 +228,8 @@ def getAllProjects():
                         'Description': proj[5],
                         'Tags': proj[6],
                         'DateMade': proj[8],
-                        'FilePath': proj[9]}
+                        'FilePath': proj[9], 
+                        'Like':proj[10]}
                 projects_dict.append(proj_dict)     
  
             return json.dumps(projects_dict)
