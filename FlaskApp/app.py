@@ -197,6 +197,7 @@ def getMyProjects():
                         'Description': proj[5],
                         'Tags': proj[6],
                         'Date': proj[7],
+                        'FilePath': proj[8],
                         'Creator': _user}
                 projects_dict.append(proj_dict)
  
