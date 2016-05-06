@@ -10,7 +10,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -96,6 +96,7 @@ def validateLogin():
             if check_password_hash(str(data[0][3]),_password):
                 session['user'] = data[0][0]
                 return redirect('/userHome')
+                
             else:
                 return render_template('error.html',error = 'Wrong Email address or Password.')
         else:
@@ -143,7 +144,6 @@ def addProject():
             _description = request.form['inputDescription']
             _tags = request.form['inputTags']
             _user = session.get('user')
-
             if request.form.get('filePath') is None:
                 _filePath = ''
             else:
@@ -197,7 +197,7 @@ def getMyProjects():
                         'Description': proj[5],
                         'Tags': proj[6],
                         'Date': proj[7],
-                        'FilePath': proj[8],
+                        'FilePath': proj[9],
                         'Creator': _user}
                 projects_dict.append(proj_dict)
  
@@ -207,9 +207,67 @@ def getMyProjects():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+@app.route('/getAllProjects')
+def getAllProjects():
+    try:
+        if session.get('user'):
+             
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_getAllProjects')
+            result = cursor.fetchall()
+ 
+            projects_dict = []
+            for proj in result:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'DateMade': proj[8],
+                        'FilePath': proj[9]}
+                projects_dict.append(proj_dict)     
+ 
+            return json.dumps(projects_dict)
+        else:
+            return render_template('error.html', error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+@app.route('/addUpdateLike',methods=['POST'])
+def addUpdateLike():
+    try:
+        if session.get('user'):
+            _projectId = request.form['wish']
+            _like = request.form['like']
+            _user = session.get('user')
+            
+ 
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_AddUpdateLikes',(_projectId,_user,_like))
+            data = cursor.fetchall()
+ 
+            if len(data) is 0:
+                conn.commit()
+                return json.dumps({'status':'OK'})
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+ 
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
 @app.route('/findProjects')
 def findProjects():
-    return render_template('findProjects.html')   
+    return redirect('/showDashboard')  
 
 @app.route('/myProjects')
 def myProjects():
@@ -226,7 +284,9 @@ def signUpFailure():
     print "eyy"
     return render_template('signUpFailure.html')  
 
-
+@app.route('/showDashboard')
+def showDashboard():
+    return render_template('dashboard.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
