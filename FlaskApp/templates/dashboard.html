@@ -10,6 +10,17 @@
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
 
     <script src="../static/js/jquery-1.12.3.min.js"></script>
+
+    <style>
+body {
+    background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   -webkit-background-size: cover;
+}
+</style>
  
 <script>
         $(function(){
@@ -27,18 +38,18 @@
                         if(itemsPerRow<3){
                             console.log(i);
                             if(i==data.length-1){
-                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
+                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                                 $('.well').append(div);
                             }
                             else{
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                             itemsPerRow++;
                             }
                         }
                         else{
                             $('.well').append(div);
                             div = $('<div>').attr('class','row');
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like));
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                             if(i==data.length-1){
                                 $('.well').append(div);
                             }
@@ -56,9 +67,18 @@
                 $.ajax({
                     url: '/addUpdateLike',
                     method: 'POST',
-                    data: {wish:$(this).attr('id').split('_')[1],like:1},
+                    data: {project:$(this).attr('id').split('_')[1],like:1},
                     success: function(response){
-                        console.log(response);
+                        
+                        var obj = JSON.parse(response);
+                        
+                        if(obj.likeStatus=="1"){
+                            console.log(obj.likeStatus);
+                            $('#span_'+spId).html('&nbsp;You & '+ (Number(obj.total)-1) + ' Others');
+                        }
+                        else{
+                            $('#span_'+spId).html('&nbsp;'+ obj.total + ' like(s)');
+                        }
                     },
                     error: function(error){
                         console.log(error);
@@ -66,7 +86,7 @@
                 });
             });
         })
-        function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like){
+        function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like, hasLiked){
             var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
             var thumbNail = $('<div>').attr('class', 'thumbnail');
             var img = $('<img>').attr({
@@ -90,7 +110,14 @@
                 'aria-hidden': 'true'
             });
  
-            var likeSpan = $('<span>').attr('aria-hidden', 'true').html('&nbsp;' + like + ' like(s)');
+            var likeSpan = $('<span>').attr({'aria-hidden':'true','id':'span_'+id});
+
+            if (hasLiked == "1") {
+                likeSpan.html('&nbsp;You & ' + (Number(like) - 1) + ' Others');
+            } 
+            else {
+                likeSpan.html('&nbsp;' + like + ' like(s)');
+            }
  
             p.append(btn.append(span));
             p.append(likeSpan);

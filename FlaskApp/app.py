@@ -211,10 +211,11 @@ def getMyProjects():
 def getAllProjects():
     try:
         if session.get('user'):
-             
+            
+            _user = session.get('user')
             con = mysql.connect()
             cursor = con.cursor()
-            cursor.callproc('sp_getAllProjects')
+            cursor.callproc('sp_getAllProjects', (_user,))
             result = cursor.fetchall()
  
             projects_dict = []
@@ -229,7 +230,8 @@ def getAllProjects():
                         'Tags': proj[6],
                         'DateMade': proj[8],
                         'FilePath': proj[9], 
-                        'Like':proj[10]}
+                        'Like':proj[10], 
+                        'HasLiked':proj[11]}
                 projects_dict.append(proj_dict)     
  
             return json.dumps(projects_dict)
@@ -242,7 +244,7 @@ def getAllProjects():
 def addUpdateLike():
     try:
         if session.get('user'):
-            _projectId = request.form['wish']
+            _projectId = request.form['project']
             _like = request.form['like']
             _user = session.get('user')
             
@@ -251,10 +253,20 @@ def addUpdateLike():
             cursor = conn.cursor()
             cursor.callproc('sp_AddUpdateLikes',(_projectId,_user,_like))
             data = cursor.fetchall()
- 
+
             if len(data) is 0:
                 conn.commit()
-                return json.dumps({'status':'OK'})
+                cursor.close()
+                conn.close()
+
+                conn = mysql.connect()
+                cursor = conn.cursor()
+                cursor.callproc('sp_getLikeStatus',(_projectId,_user))
+
+                result = cursor.fetchall()
+
+                return json.dumps({'status':'OK','total':result[0][0],'likeStatus':result[0][1]})
+ 
             else:
                 return render_template('error.html',error = 'An error occurred!')
  
