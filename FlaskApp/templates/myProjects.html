@@ -33,6 +33,10 @@
                         $(proj).find('h4').text(value.Title);
                         $(proj).find('p').text(value.Description);
                         $('.jumbotron').append(proj);
+                        proj.click(function() {
+                            console.log("clicked");
+                            window.location.href = '/projectHome';
+                        });
                     });
                     console.log(res);
                 },

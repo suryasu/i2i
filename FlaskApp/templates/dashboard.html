@@ -2,7 +2,7 @@
 <html lang="en">
  
 <head>
-    <title>Python Flask Bucket List App</title>
+    <title>i2i | Dashboard</title>
  
  
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -129,6 +129,11 @@ body {
  
             thumbNail.append(img);
             thumbNail.append(caption);
+            thumbNail.click(function() {
+                console.log("clicked");
+                window.location.href = '/projectHome';
+                console.log("clicked");
+            });
             mainDiv.append(thumbNail);
             return mainDiv;
  
