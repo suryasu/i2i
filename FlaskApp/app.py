@@ -10,7 +10,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -124,6 +124,29 @@ def logout():
 
 @app.route('/projectHome')
 def projectHome():
+    # Get project id from query string
+    _proj_id = request.args.get('proj_id')
+    print "Proj id: " + _proj_id
+    # con = mysql.connect()
+    # cursor = con.cursor()
+    # cursor.callproc('sp_GetClickedProject',(_proj_id,))
+    # myprojects = cursor.fetchall()
+ 
+    # projects_dict = []
+    # for proj in myprojects:
+    #     proj_dict = {
+    #             'Id': proj[0],
+    #             'Title': proj[1],
+    #             'Category': proj[2],
+    #             'CompletionTime': proj[3],
+    #             'NumCollaborators': proj[4],
+    #             'Description': proj[5],
+    #             'Tags': proj[6],
+    #             'Date': proj[7],
+    #             'FilePath': proj[9]}
+    #     projects_dict.append(proj_dict)
+ 
+    # return json.dumps(projects_dict)
     return render_template('project.html')
 
 @app.route('/createProject')
@@ -236,7 +259,28 @@ def getAllProjects():
  
             return json.dumps(projects_dict)
         else:
-            return render_template('error.html', error = 'Unauthorized Access')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_getAllProjects', (-1,))
+            result = cursor.fetchall()
+ 
+            projects_dict = []
+            for proj in result:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'DateMade': proj[8],
+                        'FilePath': proj[9], 
+                        'Like':proj[10], 
+                        'HasLiked':proj[11]}
+                projects_dict.append(proj_dict)     
+ 
+            return json.dumps(projects_dict)
     except Exception as e:
         return render_template('error.html', error = str(e))
 
@@ -300,6 +344,34 @@ def signUpFailure():
 @app.route('/showDashboard')
 def showDashboard():
     return render_template('dashboard.html')
+
+@app.route('/getClickedProject')
+def getClickedProject():
+    # Get project id from query string
+    # _proj_id = request.args.get('proj_id')
+    # print "Proj id: " + _proj_id
+    _proj_id = 5
+    con = mysql.connect()
+    cursor = con.cursor()
+    cursor.callproc('sp_GetClickedProject',(_proj_id,))
+    myprojects = cursor.fetchall()
+ 
+    projects_dict = []
+    for proj in myprojects:
+        proj_dict = {
+                'Id': proj[0],
+                'Title': proj[1],
+                'Category': proj[2],
+                'CompletionTime': proj[3],
+                'NumCollaborators': proj[4],
+                'Description': proj[5],
+                'Tags': proj[6],
+                'Date': proj[7],
+                'FilePath': proj[9]}
+        projects_dict.append(proj_dict)
+ 
+    return json.dumps(projects_dict)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

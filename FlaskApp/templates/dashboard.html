@@ -24,9 +24,11 @@ body {
  
 <script>
         $(function(){
+            // Store project Id to be used as query string
+            var projId;
                 $.ajax({
                     url: '/getAllProjects',
-                type: 'GET',
+                    type: 'GET',
                     success:function(response) {
                     console.log(response);
                     var data = JSON.parse(response);
@@ -34,6 +36,7 @@ body {
                     var div = $('<div>').attr('class','row');
                     for(var i=0;i<data.length;i++){
                         console.log(data[i].Title);
+                        projId = data[i].Id;
                         
                         if(itemsPerRow<3){
                             console.log(i);
@@ -129,11 +132,16 @@ body {
  
             thumbNail.append(img);
             thumbNail.append(caption);
-            thumbNail.click(function() {
-                console.log("clicked");
-                window.location.href = '/projectHome';
-                console.log("clicked");
+            // Clicking title or image will redirect to project homepage
+            title.click(function() {
+                console.log("clicked title");
+                window.location.href = '/projectHome?proj_id=' + id;
             });
+            img.click(function() {
+                console.log("clicked image");
+                window.location.href = '/projectHome?proj_id=' + id;
+            });
+
             mainDiv.append(thumbNail);
             return mainDiv;
  
