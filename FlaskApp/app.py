@@ -147,7 +147,7 @@ def projectHome():
     #     projects_dict.append(proj_dict)
  
     # return json.dumps(projects_dict)
-    return render_template('project.html')
+    return render_template('projectHome.html')
 
 @app.route('/createProject')
 def createProject():
@@ -202,15 +202,15 @@ def addProject():
 def getMyProjects():
     try:
         if session.get('user'):
+            
             _user = session.get('user')
- 
             con = mysql.connect()
             cursor = con.cursor()
-            cursor.callproc('sp_GetProjByUser',(_user,))
-            myprojects = cursor.fetchall()
+            cursor.callproc('sp_getProjByUser', (_user,))
+            result = cursor.fetchall()
  
             projects_dict = []
-            for proj in myprojects:
+            for proj in result:
                 proj_dict = {
                         'Id': proj[0],
                         'Title': proj[1],
@@ -219,14 +219,36 @@ def getMyProjects():
                         'NumCollaborators': proj[4],
                         'Description': proj[5],
                         'Tags': proj[6],
-                        'Date': proj[7],
-                        'FilePath': proj[9],
-                        'Creator': _user}
-                projects_dict.append(proj_dict)
+                        'DateMade': proj[8],
+                        'FilePath': proj[9], 
+                        'Like':proj[10], 
+                        'HasLiked':proj[11]}
+                projects_dict.append(proj_dict)     
  
             return json.dumps(projects_dict)
         else:
-            return render_template('error.html', error = 'Unauthorized Access')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_getAllProjects', (-1,))
+            result = cursor.fetchall()
+ 
+            projects_dict = []
+            for proj in result:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'DateMade': proj[8],
+                        'FilePath': proj[9], 
+                        'Like':proj[10], 
+                        'HasLiked':proj[11]}
+                projects_dict.append(proj_dict)     
+ 
+            return json.dumps(projects_dict)
     except Exception as e:
         return render_template('error.html', error = str(e))
 
@@ -350,7 +372,7 @@ def getClickedProject():
     # Get project id from query string
     # _proj_id = request.args.get('proj_id')
     # print "Proj id: " + _proj_id
-    _proj_id = 5
+    _proj_id = request.args.get('proj_id')
     con = mysql.connect()
     cursor = con.cursor()
     cursor.callproc('sp_GetClickedProject',(_proj_id,))

@@ -8,50 +8,10 @@
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
  
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    <link href="../static/signup.css" rel="stylesheet">
-    <script src="../static/js/jquery-1.12.3.min.js"></script>
-    <script>
-        $(function() {
-            $.ajax({
-                url: '/getMyProjects',
-                type: 'GET',
-                success: function(res) {
-                    var div = $('<div>')
-                        .attr('class', 'list-group')
-                        .append($('<a>')
-                            .attr('class', 'list-group-item active')
-                            .append($('<h4>')
-                                .attr('class', 'list-group-item-heading'),
-                                $('<p>')
-                                .attr('class', 'list-group-item-text')));
-                    var projObj = JSON.parse(res);
 
-                    var proj = '';
- 
-                    $.each(projObj, function(index, value) {
-                        proj = $(div).clone();
-                        $(proj).find('h4').text(value.Title);
-                        $(proj).find('p').text(value.Description);
-                        $('.jumbotron').append(proj);
-                        proj.click(function() {
-                            console.log("clicked");
-                            // WILL HAVE TO PULL id OUT
-                            // window.location.href =  '/projectHome?proj_id=' ;
-                        });
-                    });
-                    console.log(res);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        });
-    </script>
- 
- 
-</head>
- 
-<style>
+    <script src="../static/js/jquery-1.12.3.min.js"></script>
+
+    <style>
 body {
     background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
     background-repeat: no-repeat;
@@ -62,32 +22,184 @@ body {
 }
 </style>
  
-    <div class="container">
-        <div class="header">
+<script>
+        $(function(){
+            // Store project Id to be used as query string
+            var projId;
+                $.ajax({
+                    url: '/getMyProjects',
+                    type: 'GET',
+                    success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    var itemsPerRow = 0;
+                    var div = $('<div>').attr('class','row');
+                    for(var i=0;i<data.length;i++){
+                        console.log(data[i].Title);
+                        projId = data[i].Id;
+                        
+                        if(itemsPerRow<3){
+                            console.log(i);
+                            if(i==data.length-1){
+                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                                $('.well').append(div);
+                            }
+                            else{
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                            itemsPerRow++;
+                            }
+                        }
+                        else{
+                            $('.well').append(div);
+                            div = $('<div>').attr('class','row');
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                            if(i==data.length-1){
+                                $('.well').append(div);
+                            }
+                            itemsPerRow = 0;
+                        }
+                    }
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+            $(document).on('click','[id^="btn_"]',function(){
+                var spId = $(this).attr('id').split('_')[1];
+                $.ajax({
+                    url: '/addUpdateLike',
+                    method: 'POST',
+                    data: {project:$(this).attr('id').split('_')[1],like:1},
+                    success: function(response){
+                        
+                        var obj = JSON.parse(response);
+                        
+                        if(obj.likeStatus=="1"){
+                            console.log(obj.likeStatus);
+                            $('#span_'+spId).html('&nbsp;You & '+ (Number(obj.total)-1) + ' Others');
+                        }
+                        else{
+                            $('#span_'+spId).html('&nbsp;'+ obj.total + ' like(s)');
+                        }
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+                });
+            });
+        })
+        function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like, hasLiked){
+            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
+            var thumbNail = $('<div>').attr('class', 'thumbnail');
+            var img = $('<img>').attr({
+                'src': filepath,
+                'data-holder-rendered': true,
+                'style': 'height: 150px; width: 150px; display: block'
+            });
+            var caption = $('<div>').attr('class', 'caption');
+            var title = $('<h3>').text(title);
+            var desc = $('<p>').text(desc);
+ 
+ 
+            var p = $('<p>');
+            var btn = $('<button>').attr({
+                'id': 'btn_' + id,
+                'type': 'button',
+                'class': 'btn btn-danger btn-sm'
+            });
+            var span = $('<span>').attr({
+                'class': 'glyphicon glyphicon-thumbs-up',
+                'aria-hidden': 'true'
+            });
+ 
+            var likeSpan = $('<span>').attr({'aria-hidden':'true','id':'span_'+id});
+
+            if (hasLiked == "1") {
+                likeSpan.html('&nbsp;You & ' + (Number(like) - 1) + ' Others');
+            } 
+            else {
+                likeSpan.html('&nbsp;' + like + ' like(s)');
+            }
+ 
+            p.append(btn.append(span));
+            p.append(likeSpan);
+ 
+ 
+            caption.append(title);
+            caption.append(desc);
+            caption.append(p);
+ 
+            thumbNail.append(img);
+            thumbNail.append(caption);
+            // Clicking title or image will redirect to project homepage
+            title.click(function() {
+                console.log("clicked title");
+                window.location.href = '/projectHome?proj_id=' + id;
+            });
+            img.click(function() {
+                console.log("clicked image");
+                window.location.href = '/projectHome?proj_id=' + id;
+            });
+
+            mainDiv.append(thumbNail);
+            return mainDiv;
+ 
+ 
+}
+    </script>
+
+    <style>
+    .btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+    </style>
+   
+  </head>
+
+  <body>
+
+   <div class="container">
+<div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" ><a href="/">Home</a></li>
-                    <li role="presentation" class="active"><a href="/userHome">User</a>
-                    <li role="presentation"><a href="/logout">Logout</a>
+                    <li role="presentation"><a href="/userHome">User</a></li>
+                    <li role="presentation"><a href="/logout">Logout</a></li>
                     </li>
                 </ul>
             </nav>
             <h3 class="text-muted">i2i</h3>
         </div>
- 
-        <div class="jumbotron">
-            <h1>My Projects:</h1>
- 
-        </div>
 
 
- 
- 
-        <footer class="footer">
-            <p>&copy; Company 2015</p>
-        </footer>
- 
+    
+
+<div class="well">
+
+</div>
+    
+
+      <footer class="footer">
+        <p>&copy; Company 2015</p>
+      </footer>
+
     </div>
-</body>
- 
+  </body>
 </html>
