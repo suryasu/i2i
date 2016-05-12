@@ -10,6 +10,71 @@
     <link href="../static/createproj.css" rel="stylesheet">
     
   </head>
+  <script src="../static/js/jquery-1.12.3.min.js"></script>
+  <script>
+        var id;
+        var title;
+        var category;
+        var completionTime;
+        var numCollaborators;
+        var description;
+        $.extend({
+          getUrlVars: function(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+              hash = hashes[i].split('=');
+              vars.push(hash[0]);
+              vars[hash[0]] = hash[1];
+            }
+            return vars;
+          },
+          getUrlVar: function(name){
+            return $.getUrlVars()[name];
+          }
+        });
+        $(function() {
+          id = $.getUrlVar('proj_id');
+          console.log(id);
+            $.ajax({
+                url: '/getClickedProject?proj_id=' + id,
+                type: 'GET',
+                success: function(res) {
+                    var div = $('<div>')
+                        .attr('class', 'list-group')
+                        .append($('<a>')
+                            .attr('class', 'list-group-item active')
+                            .append($('<h4>')
+                                .attr('class', 'list-group-item-heading'),
+                                $('<p>')
+                                .attr('class', 'list-group-item-text')));
+                    var projObj = JSON.parse(res);
+
+                    var proj = '';
+ 
+                    $.each(projObj, function(index, value) {
+                        proj = $(div).clone();
+                        $(proj).find('h4').text(value.Title);
+                        $(proj).find('p').text(value.Description);
+                        $('.jumbotron').append(proj);
+                    });
+                    console.log(res);
+                    title = projObj[0]["Title"];
+                    category = projObj[0]["Category"];
+                    numCollaborators = projObj[0]["NumCollaborators"];
+                    completionTime = projObj[0]["CompletionTime"];
+                    description = projObj[0]["Description"];
+                    console.log(category);
+                    console.log(numCollaborators)
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+ 
  
 <style>
 body {
@@ -26,7 +91,7 @@ body {
       <div class="header">
         <nav>
           <ul class="nav nav-pills pull-right">
-            <li role="presentation" ><a href="main">Home</a></li>
+            <li role="presentation" ><a href="/">Home</a></li>
             <li role="presentation"><a href="#">Sign In</a></li>
             <li role="presentation" class="active"><a href="#">Sign Up</a></li>
           </ul>
