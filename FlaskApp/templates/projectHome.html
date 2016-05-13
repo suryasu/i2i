@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>i2i | Project Homepage</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/createproj.css" rel="stylesheet">
+    
+  </head>
+  <script src="../static/js/jquery-1.12.3.min.js"></script>
+  <script>
+        var id;
+        var title;
+        var category;
+        var completionTime;
+        var numCollaborators;
+        var description;
+        var filepath;
+        $.extend({
+          getUrlVars: function(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+              hash = hashes[i].split('=');
+              vars.push(hash[0]);
+              vars[hash[0]] = hash[1];
+            }
+            return vars;
+          },
+          getUrlVar: function(name){
+            return $.getUrlVars()[name];
+          }
+        });
+        $(function(){
+            id = $.getUrlVar('proj_id');
+          console.log(id);
+            // Store project Id to be used as query string
+            var projId;
+                $.ajax({
+                    url: '/getClickedProject?proj_id=' + id,
+                    type: 'GET',
+                    success:function(response) {
+                    console.log(response);
+                    var projObj = JSON.parse(response);
+                    console.log(projObj);
+                    title = projObj[0]["Title"];
+                    category = projObj[0]["Category"];
+                    numCollaborators = projObj[0]["NumCollaborators"];
+                    completionTime = projObj[0]["CompletionTime"];
+                    description = projObj[0]["Description"];
+                    tags = projObj[0]["Tags"];
+                    filepath = projObj[0]["FilePath"];
+                    console.log(filepath);
+                    console.log(numCollaborators)
+
+                    var div = $('<div>')
+                        .attr('class', 'da-slider')
+                        .attr('class','row');
+                    div.append(AddImage(filepath));
+                    // var html = '<div class="da-slide"> <h2>Some headline</h2> <p>Some description</p> </div>'
+                    var html = '<div class="da-slide"> <h2>'
+                    // var html = "<div class=\"scenario/images/" + title + "\" />";
+                    var html2 = '</h2> <p>Some description</p> </div>'
+
+                    // div.append(html);
+                    // div.append(title);
+                    // div.append(html2);
+                    div.append(
+                        "<div class = da-slide>"
+                             +"<h2>"
+                                  +title
+                             +"</h2>"
+                             +"<p>"
+                                +"Category: "
+                                + category
+                             +"</p>"
+                             +"<p>"
+                                +"Desired Number of Collaborators: "
+                                + numCollaborators
+                             +"</p>"
+                             +"<p>"
+                                +"Expected Completion Time: "
+                                + completionTime
+                             +"</p>"
+                             +"<p>"
+                                +"Description: "
+                                + description
+                             +"</p>"
+                             +"<p>"
+                                +"Tags: "
+                                + tags
+                             +"</p>"
+                        +"</div>"
+                    );
+                    // div.append('Project title: ', title, '\n');
+                    // div.append('Category: ', category);
+                    // div.append('Desired Number of Collaborators: ', numCollaborators);
+                    $('.well').append(div);
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+        })
+        function AddImage(filepath) {
+            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
+            var image = $('<div>').attr('class', 'da-image');
+            var img = $('<img>').attr({
+                'src': filepath,
+                'data-holder-rendered': true,
+                'style': 'height: 150px; width: 150px; display: block'
+            });
+ 
+            image.append(img);
+            mainDiv.append(image);
+            return mainDiv;
+        }
+        // function AddText(title, category, numCollaborators, completionTime, description, tags) {
+        //     // body...
+        //     var mainDiv = $('<div>').attr('class', 'da-slide');
+        //     var html =    
+        //     return mainDiv;
+        // }
+
+    </script>
+
+<style>
+body {
+    background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   -webkit-background-size: cover;
+}
+</style>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="/">Home</a></li>
+            <li role="presentation"><a href="#">Sign In</a></li>
+            <li role="presentation" class="active"><a href="#">Sign Up</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Project Homepage</h3>
+      </div>
+ 
+      <!-- <div class="jumbotron"> -->
+<div class="well"></div>
+<!--       </div> -->
+ 
+       
+ 
+      <footer class="footer">
+        <p>&copy; i2i 2016</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
