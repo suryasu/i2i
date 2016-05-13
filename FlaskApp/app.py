@@ -1,6 +1,7 @@
 from flask import Flask, render_template, json, request, redirect, session, jsonify
 from flask.ext.mysql import MySQL
 from werkzeug import generate_password_hash, check_password_hash
+from flask.ext.mail import Mail
 import os
 import uuid
 
@@ -10,10 +11,22 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
+
+# email server
+MAIL_SERVER = 'smtp.googlemail.com'
+MAIL_PORT = 465
+MAIL_USE_TLS = False
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'jagrawal268'
+MAIL_PASSWORD = 'Ignou123'
+
+# administrator list
+ADMINS = ['jagrawal268@gmail.com']
+mail = Mail(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/Uploads'
 
