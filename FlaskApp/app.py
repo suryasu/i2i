@@ -71,7 +71,7 @@ def signUp():
         if len(data) is 0:
             conn.commit()
             # return redirect('/')
-            return render_template('signUpSuccess.html')
+            return render_template('addSkills.html')
             # return json.dumps({'message':'User created successfully !'})
         else:
             return redirect('/')
@@ -210,6 +210,92 @@ def addProject():
     finally:
         cursor.close()
         conn.close()
+
+@app.route('/addSkills')
+def fillSkills():
+    if session.get('user'):
+        return render_template('addSkills.html')
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
+
+#@app.route('/addSkill', methods=['POST'])
+# def addSkill():
+#     try:
+#         conn = mysql.connect()
+#         cursor = conn.cursor()
+#         if session.get('user'):
+#             _skill1 = request.form['inputSkill1']
+#             _skill2 = request.form['inputSkill2']
+#             _skill3 = request.form['inputSkill3']
+#             _skill4 = request.form['inputSkill4']
+#             _skill5 = request.form['inputSkill5']
+#             _user = session.get('user')
+
+#             print _skill1
+#             print _skill2
+#             print _skill3
+#             print _skill4
+#             print _skill5
+ 
+            
+#             cursor.callproc('sp_addSkills',(_skill1, _skill2, _skill3, _skill4, _skill5, _user,))
+#             data = cursor.fetchall()
+ 
+#             if len(data) is 0:
+#                 conn.commit()
+#                 return redirect('/addSkill')
+#             else:
+#                 return render_template('error.html',error = 'An error occurred!')
+ 
+#         else:
+#             return render_template('error.html',error = 'Unauthorized Access')
+#     except Exception as e:
+#         return render_template('error.html',error = str(e))
+#     finally:
+#         cursor.close()
+#         conn.close()
+@app.route('/addSkill', methods=['POST'])
+def addSkill():
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        # _skill1 = request.form['input1']
+        # _skill2 = request.form['input2']
+        # _skill3 = request.form['input3']
+        # _skill4 = request.form['input4']
+        # _skill5 = request.form['input5']
+        _skill1 = request.args.get('input1')
+        _skill2 = request.args.get('input2')
+        _skill3 = request.args.get('input3')
+        _skill4 = request.args.get('input4')
+        _skill5 = request.args.get('input5')
+
+        _user = session.get('user')
+
+        print _skill1
+        print _skill2
+        print _skill3
+        print _skill4
+        print _skill5
+ 
+        
+        cursor.callproc('sp_addSkills',(_skill1, _skill2, _skill3, _skill4, _skill5, _user,))
+        data = cursor.fetchall()
+ 
+        if len(data) is 0:
+            conn.commit()
+            return redirect('/addSkill')
+        else:
+            return render_template('error.html',error = 'An error occurred!')
+ 
+        return render_template('error.html',error = 'Unauthorized Access')
+
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        if cursor:
+            cursor.close()
+            conn.close()
 
 @app.route('/getMyProjects')
 def getMyProjects():
@@ -410,5 +496,3 @@ def getClickedProject():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
-    
