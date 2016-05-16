@@ -71,7 +71,7 @@ def signUp():
         if len(data) is 0:
             conn.commit()
             # return redirect('/')
-            return render_template('addSkills.html')
+            return render_template('skills.html')
             # return json.dumps({'message':'User created successfully !'})
         else:
             return redirect('/')
@@ -169,7 +169,7 @@ def createProject():
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
-@app.route('/addProject', methods=['POST'])
+@app.route('/addProject', methods=['POST', 'GET'])
 def addProject():
     try:
         if session.get('user'):
@@ -212,11 +212,12 @@ def addProject():
         conn.close()
 
 @app.route('/addSkills')
-def fillSkills():
-    if session.get('user'):
-        return render_template('addSkills.html')
-    else:
-        return render_template('error.html', error = 'Unauthorized Access')
+def addSkills():
+    return render_template('skills.html')
+    #if session.get('user'):
+        #return render_template('addSkills_doc.html')
+    #else:
+        #return render_template('error.html', error = 'Unauthorized Access')
 
 #@app.route('/addSkill', methods=['POST'])
 # def addSkill():
