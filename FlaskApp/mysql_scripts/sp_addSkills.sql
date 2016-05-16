@@ -12,7 +12,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addSkills`(
     IN p_user_id bigint
 )
 BEGIN
-    insert into tbl_skills2(
+    replace into tbl_skills2(
         user_id,
         skill1,
         skill2,
@@ -22,7 +22,7 @@ BEGIN
     )
     values
     (
-		p_user_id,
+        p_user_id,
         p_skill1,
         p_skill2,
         p_skill3,
