@@ -11,7 +11,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -71,7 +71,7 @@ def signUp():
         if len(data) is 0:
             conn.commit()
             # return redirect('/')
-            return render_template('skills.html')
+            return render_template('addSkills.html')
             # return json.dumps({'message':'User created successfully !'})
         else:
             return redirect('/')
@@ -169,7 +169,7 @@ def createProject():
     else:
         return render_template('error.html',error = 'Unauthorized Access')
 
-@app.route('/addProject', methods=['POST', 'GET'])
+@app.route('/addProject', methods=['POST'])
 def addProject():
     try:
         if session.get('user'):
@@ -212,12 +212,18 @@ def addProject():
         conn.close()
 
 @app.route('/addSkills')
-def addSkills():
-    return render_template('skills.html')
+def fillSkills():
     #if session.get('user'):
-        #return render_template('addSkills_doc.html')
+    return render_template('addSkills.html')
     #else:
         #return render_template('error.html', error = 'Unauthorized Access')
+
+@app.route('/addLanguages')
+def fillLanguages():
+    if session.get('user'):
+        return render_template('addLanguages.html')
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
 
 #@app.route('/addSkill', methods=['POST'])
 # def addSkill():
@@ -280,10 +286,105 @@ def addSkill():
  
             if len(data) is 0:
                 conn.commit()
-                return redirect('/userHome')
+                return redirect('/addLanguages')
             else:
                 return render_template('error.html',error = 'An error occurred!')
  
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@app.route('/addLanguage',methods=['POST'])
+def addWish():
+    try:
+        if session.get('user'):
+            _user = session.get('user')
+
+            if request.form.get('java') is None:
+                _java = 0
+            else:
+                _java = 1
+
+            if request.form.get('python') is None:
+                _python = 0
+            else:
+                _python = 1
+
+            if request.form.get('c') is None:
+                _c = 0
+            else:
+                _c = 1
+
+            if request.form.get('ruby') is None:
+                _ruby = 0
+            else:
+                _ruby = 1
+
+            if request.form.get('hadoop') is None:
+                _hadoop = 0
+            else:
+                _hadoop = 1
+
+            if request.form.get('css') is None:
+                _css = 0
+            else:
+                _css = 1
+
+            if request.form.get('php') is None:
+                _php = 0
+            else:
+                _php = 1
+
+            if request.form.get('haskell') is None:
+                _haskell = 0
+            else:
+                _haskell = 1
+
+            if request.form.get('mysql') is None:
+                _mysql = 0
+            else:
+                _mysql = 1
+
+            if request.form.get('mathematica') is None:
+                _mathematica = 0
+            else:
+                _mathematica = 1
+
+            if request.form.get('matlab') is None:
+                _matlab = 0
+            else:
+                _matlab = 1
+
+            if request.form.get('solidworks') is None:
+                _solidworks = 0
+            else:
+                _solidworks = 1
+
+            if request.form.get('cuda') is None:
+                _cuda = 0
+            else:
+                _cuda = 1
+
+            if request.form.get('assembly') is None:
+                _assembly = 0
+            else:
+                _assembly = 1
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addLanguages',(_java, _python, _c, _ruby, _hadoop, _css,  _php,  _haskell, _mysql, _mathematica, _matlab, _solidworks, _cuda, _assembly, _user))
+            data = cursor.fetchall()
+
+            if len(data) is 0:
+                conn.commit()
+                return redirect('/userHome')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
         else:
             return render_template('error.html',error = 'Unauthorized Access')
     except Exception as e:
