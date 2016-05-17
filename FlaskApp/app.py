@@ -11,7 +11,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -67,17 +67,24 @@ def signUp():
         cursor.callproc('sp_createUser',(_name,_email,_hashed_password))
         
         data = cursor.fetchall()
+        print "created user: "
+        print data
+        # conn.commit()
  
         if len(data) is 0:
             conn.commit()
+            cursor.close()
+            cursor = conn.cursor()
+            cursor.callproc('sp_validateLogin',(_email,))
+            data = cursor.fetchall()
+            print "validateuser"
+            print data
+            session['user'] = data[0][0]
             # return redirect('/')
             return render_template('addSkills.html')
-            # return json.dumps({'message':'User created successfully !'})
         else:
-            return redirect('/')
-            # return render_template('index.html')
-            return render_template('signUpFailure.html')
-            # return json.dumps({'error':str(data[0])})
+            # return render_template('findProjects.html')
+            return json.dumps({'error':str(data[0])})
         
 
     else:
@@ -263,6 +270,8 @@ def fillLanguages():
 #         conn.close()
 @app.route('/addSkill', methods=['POST'])
 def addSkill():
+    conn = mysql.connect()
+    cursor = conn.cursor()
     try:
         if session.get('user'):
             _skill1 = request.form['input1']
@@ -279,8 +288,6 @@ def addSkill():
             print _skill4
             print _skill5
  
-            conn = mysql.connect()
-            cursor = conn.cursor()
             cursor.callproc('sp_addSkills',(_skill1, _skill2, _skill3, _skill4, _skill5, _user,))
             data = cursor.fetchall()
  
