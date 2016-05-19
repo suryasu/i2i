@@ -1,17 +1,13 @@
 USE `BucketList`;
-DROP procedure IF EXISTS `sp_getSkillsByUser`;
+DROP procedure IF EXISTS `sp_GetSkillsByUser`;
  
 DELIMITER $$
 USE `BucketList`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getSkillsByUser`(
-	p_user_id int
-
+CREATE PROCEDURE `sp_GetSkillsByUser` (
+IN p_user_id bigint
 )
 BEGIN
-    select * from tbl_skills2 left join tbl_languages
-on tbl_skills2.user_id = tbl_languages.user_id
-where tbl_skills2.user_id = p_user_id;
-
+    select * from tbl_skills2 where p_user_id = user_id;
 END$$
  
 DELIMITER ;
