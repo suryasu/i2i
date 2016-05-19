@@ -225,6 +225,13 @@ def fillSkills():
     #else:
         #return render_template('error.html', error = 'Unauthorized Access')
 
+@app.route('/editSkills')
+def editSkills():
+    #if session.get('user'):
+    return render_template('editSkills.html')
+    #else:
+        #return render_template('error.html', error = 'Unauthorized Access')
+
 @app.route('/addLanguages')
 def fillLanguages():
     if session.get('user'):
@@ -232,42 +239,14 @@ def fillLanguages():
     else:
         return render_template('error.html', error = 'Unauthorized Access')
 
-#@app.route('/addSkill', methods=['POST'])
-# def addSkill():
-#     try:
-#         conn = mysql.connect()
-#         cursor = conn.cursor()
-#         if session.get('user'):
-#             _skill1 = request.form['inputSkill1']
-#             _skill2 = request.form['inputSkill2']
-#             _skill3 = request.form['inputSkill3']
-#             _skill4 = request.form['inputSkill4']
-#             _skill5 = request.form['inputSkill5']
-#             _user = session.get('user')
+@app.route('/editLanguages')
+def editLanguages():
+    if session.get('user'):
+        return render_template('editLanguages.html')
+    else:
+        return render_template('error.html', error = 'Unauthorized Access')
 
-#             print _skill1
-#             print _skill2
-#             print _skill3
-#             print _skill4
-#             print _skill5
- 
-            
-#             cursor.callproc('sp_addSkills',(_skill1, _skill2, _skill3, _skill4, _skill5, _user,))
-#             data = cursor.fetchall()
- 
-#             if len(data) is 0:
-#                 conn.commit()
-#                 return redirect('/addSkill')
-#             else:
-#                 return render_template('error.html',error = 'An error occurred!')
- 
-#         else:
-#             return render_template('error.html',error = 'Unauthorized Access')
-#     except Exception as e:
-#         return render_template('error.html',error = str(e))
-#     finally:
-#         cursor.close()
-#         conn.close()
+
 @app.route('/addSkill', methods=['POST'])
 def addSkill():
     conn = mysql.connect()
@@ -305,8 +284,45 @@ def addSkill():
         cursor.close()
         conn.close()
 
+@app.route('/editSkill', methods=['POST'])
+def editSkill():
+    conn = mysql.connect()
+    cursor = conn.cursor()
+    try:
+        if session.get('user'):
+            _skill1 = request.form['input1']
+            _skill2 = request.form['input2']
+            _skill3 = request.form['input3']
+            _skill4 = request.form['input4']
+            _skill5 = request.form['input5']
+
+            _user = session.get('user')
+
+            print _skill1
+            print _skill2
+            print _skill3
+            print _skill4
+            print _skill5
+ 
+            cursor.callproc('sp_addSkills',(_skill1, _skill2, _skill3, _skill4, _skill5, _user,))
+            data = cursor.fetchall()
+ 
+            if len(data) is 0:
+                conn.commit()
+                return redirect('/accountSettings')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+ 
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
 @app.route('/addLanguage',methods=['POST'])
-def addWish():
+def addLanguage():
     try:
         if session.get('user'):
             _user = session.get('user')
@@ -389,6 +405,102 @@ def addWish():
             if len(data) is 0:
                 conn.commit()
                 return redirect('/userHome')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+
+@app.route('/editLanguage',methods=['POST'])
+def editLanguage():
+    try:
+        if session.get('user'):
+            _user = session.get('user')
+
+            if request.form.get('java') is None:
+                _java = 0
+            else:
+                _java = 1
+
+            if request.form.get('python') is None:
+                _python = 0
+            else:
+                _python = 1
+
+            if request.form.get('c') is None:
+                _c = 0
+            else:
+                _c = 1
+
+            if request.form.get('ruby') is None:
+                _ruby = 0
+            else:
+                _ruby = 1
+
+            if request.form.get('hadoop') is None:
+                _hadoop = 0
+            else:
+                _hadoop = 1
+
+            if request.form.get('css') is None:
+                _css = 0
+            else:
+                _css = 1
+
+            if request.form.get('php') is None:
+                _php = 0
+            else:
+                _php = 1
+
+            if request.form.get('haskell') is None:
+                _haskell = 0
+            else:
+                _haskell = 1
+
+            if request.form.get('mysql') is None:
+                _mysql = 0
+            else:
+                _mysql = 1
+
+            if request.form.get('mathematica') is None:
+                _mathematica = 0
+            else:
+                _mathematica = 1
+
+            if request.form.get('matlab') is None:
+                _matlab = 0
+            else:
+                _matlab = 1
+
+            if request.form.get('solidworks') is None:
+                _solidworks = 0
+            else:
+                _solidworks = 1
+
+            if request.form.get('cuda') is None:
+                _cuda = 0
+            else:
+                _cuda = 1
+
+            if request.form.get('assembly') is None:
+                _assembly = 0
+            else:
+                _assembly = 1
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addLanguages',(_java, _python, _c, _ruby, _hadoop, _css,  _php,  _haskell, _mysql, _mathematica, _matlab, _solidworks, _cuda, _assembly, _user))
+            data = cursor.fetchall()
+
+            if len(data) is 0:
+                conn.commit()
+                return redirect('/accountSettings')
             else:
                 return render_template('error.html',error = 'An error occurred!')
 
@@ -609,6 +721,27 @@ def viewRequests():
 @app.route('/showDashboard')
 def showDashboard():
     return render_template('dashboard.html')
+
+@app.route('/accountSettings')
+def accountSettings():
+    return render_template('accountSettings.html')
+
+@app.route('/getMySkills')
+def getMySkills():
+    try:
+        _user = session.get('user')
+            
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_getSkillsByUser', (_user,))
+        result = cursor.fetchall()
+ 
+ 
+        return json.dumps(result)
+
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 
 @app.route('/getClickedProject')
 def getClickedProject():
