@@ -5,6 +5,13 @@ from flask.ext.mail import Mail
 import os
 import uuid
 
+import re,math
+
+from collections import Counter
+from difflib import SequenceMatcher
+
+WORD = re.compile(r'\w+')
+
 mysql = MySQL()
 app = Flask(__name__)
 app.secret_key = 'why would I tell you my secret key?'
@@ -29,6 +36,46 @@ ADMINS = ['jagrawal268@gmail.com']
 mail = Mail(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/Uploads'
+
+def get_cosine(vec1, vec2):
+     intersection = set(vec1.keys()) & set(vec2.keys())
+     numerator = sum([vec1[x] * vec2[x] for x in intersection])
+
+     sum1 = sum([vec1[x]**2 for x in vec1.keys()])
+     sum2 = sum([vec2[x]**2 for x in vec2.keys()])
+     denominator = math.sqrt(sum1) * math.sqrt(sum2)
+
+     if not denominator:
+        return 0.0
+     else:
+        return float(numerator) / denominator
+
+def text_to_vector(text):
+     words = WORD.findall(text)
+     return Counter(words)
+     
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+def matches(text,keywords):
+    #return sum(pearson_correlation(word in text.lower() for word in keywords)
+    sum = 0
+    for word in text.lower().split(","):
+        #print 'word'
+        #print word
+        #print keywords
+        vector1 = text_to_vector(word)
+        for key in keywords:
+            print 'key'
+            print key
+            if not is_number(key):       
+                vector2 = text_to_vector(key.lower())
+                sum += get_cosine(vector1, vector2)
+    return sum
 
 
 @app.route("/")
@@ -601,23 +648,24 @@ def getAllProjects():
             print 'Skills'
             print skills
             ranks = {}
-            
+            print 'here'
             for key, value in projects_dict.iteritems():
-                sum_val = 0
-                split_lst = value.split()
-                print 'Tags'
-                print split_lst
-                for tag in split_lst:
-                    print 'tag'
-                    print tag
-                    print 'skills'
-                    print skills
-                    if tag in skills:
-                        print 'in here'
-                        sum_val += 1
-                ranks[key] = sum_val
+                #sum_val = 0
+                #split_lst = value.split(",")
+                #print 'Tags'
+                #print split_lst
+                #for tag in split_lst:
+                #    print 'tag'
+                #    print tag
+                #    print 'skills'
+                #    print skills
+                #    if tag in skills:
+                #        print 'in here'
+                #        sum_val += 1
+                print value
+                ranks[key] = matches(value, skills)
             print 'lwejrios'
-            sorted_ranks = sorted(ranks.items(),key=lambda item:item[1], reverse=True)[:2]
+            sorted_ranks = sorted(ranks.items(),key=lambda item:item[1], reverse=True)[:5]
             print sorted_ranks
             fin = []
             for idx in range(0,len(ranked_projects)):
