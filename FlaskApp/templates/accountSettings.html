@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>i2i | Account Settings</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+    <script src="../static/js/jquery-1.12.3.min.js"></script>
+    
+  </head>
+ 
+<style>
+body {
+    background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   -webkit-background-size: cover;
+}
+</style>
+<script>
+        $(function(){
+            // Store project Id to be used as query string
+            var projId;
+                $.ajax({
+                    url: '/getMySkills',
+                    type: 'GET',
+                    success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    var _user_id = data[0][0];
+                    var _skill1 = data[0][1];
+                    var _skill2 = data[0][2];
+                    var _skill3 = data[0][3];
+                    var _skill4 = data[0][4];
+                    var _skill5 = data[0][5];
+                    
+                    var skilldiv = $('<div>').attr('class','da-slider');
+                    skilldiv.append(
+                        "<div class = da-slide>"
+                             // +"<h2>"
+                             //      +"Skills    "
+                             //      + '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>'
+                             // +"</h2>"
+                             +"<p>"
+                                + _skill1
+                             +"</p>"
+                             +"<p>"
+                                + _skill2
+                             +"</p>"
+                             +"<p>"
+                                + _skill3
+                             +"</p>"
+                             +"<p>"
+                                + _skill4
+                             +"</p>"
+                             +"<p>"
+                                + _skill5
+                             +"</p>"
+                             // +"<h2>"
+                             //      +"Languages    "
+                             //      + '<button type="button" id="editLanguages" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>'
+                             // +"</h2>"
+        
+                    );
+                    skilldiv.append(+"</div>");
+
+                    var langdiv = $('<div>').attr('class','da-slider');
+                    langdiv.append(
+                        "<div class = da-slide>"
+                    );
+                    if (data[0][7] == 1) {
+                        langdiv.append("<p>"
+                                + "Java"
+                             +"</p>");
+                    }
+                    if (data[0][8] == 1) {
+                        langdiv.append("<p>"
+                                + "Python"
+                             +"</p>");
+                    }
+                    if (data[0][9] == 1) {
+                        langdiv.append("<p>"
+                                + "C/C++"
+                             +"</p>");
+                    }
+                    if (data[0][10] == 1) {
+                        langdiv.append("<p>"
+                                + "Ruby"
+                             +"</p>");
+                    }
+                    if (data[0][11] == 1) {
+                        langdiv.append("<p>"
+                                + "Hadoop"
+                             +"</p>");
+                    }
+                    if (data[0][12] == 1) {
+                        langdiv.append("<p>"
+                                + "CSS"
+                             +"</p>");
+                    }
+                    if (data[0][13] == 1) {
+                        langdiv.append("<p>"
+                                + "PHP"
+                             +"</p>");
+                    }
+                    if (data[0][14] == 1) {
+                        langdiv.append("<p>"
+                                + "Haskell"
+                             +"</p>");
+                    }
+                    if (data[0][15] == 1) {
+                        langdiv.append("<p>"
+                                + "Mysql"
+                             +"</p>");
+                    }
+                    if (data[0][16] == 1) {
+                        langdiv.append("<p>"
+                                + "Mathematica"
+                             +"</p>");
+                    }
+                    if (data[0][17] == 1) {
+                        langdiv.append("<p>"
+                                + "Matlab"
+                             +"</p>");
+                    }
+                    if (data[0][18] == 1) {
+                        langdiv.append("<p>"
+                                + "Solid Works"
+                             +"</p>");
+                    }
+                    if (data[0][19] == 1) {
+                        langdiv.append("<p>"
+                                + "Cuda"
+                             +"</p>");
+                    }
+                    if (data[0][20] == 1) {
+                        langdiv.append("<p>"
+                                + "Assembly"
+                             +"</p>");
+                    }
+
+                    langdiv.append(+"</div>");
+
+                    $('#skillWell').append(skilldiv);
+                    $('#langWell').append(langdiv);
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+        })
+
+    </script>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="/">Home</a></li>
+            <li role="presentation"><a href="userHome">User Home</a></li>
+            <li role="presentation" class="active"><a href="showSignup">Sign Up</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">I2I</h3>
+      </div>
+ 
+<!--       <div class="jumbotron">
+        <h2><center>Account Settings</center></h2>
+
+      </form>
+      </div> -->
+      <div class="row marketing">
+            <div class="col-lg-6">
+            <h2><center>Account Settings</center></h2>
+            <h3>Skills</h3>
+            <button id="editSkills" type="button" class="btn btn-default" onClick="window.location='/editSkills'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
+            <div class="well" id="skillWell">
+
+            </div>
+
+            <h3>Languages</h3>
+            <button id="editSkills" type="button" class="btn btn-default" onClick="window.location='/editLanguages'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
+            <div class="well" id="langWell">
+
+            </div>
+
+
+            <!-- <button type="button" class="btn btn-default btn-lg">
+              <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Star
+            </button>
+ -->
+            </div>
+ 
+        </div>
+
+ 
+       
+ 
+      <footer class="footer">
+        <p>&copy; i2i 2016</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
