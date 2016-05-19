@@ -675,7 +675,11 @@ def signUpSuccess():
 @app.route('/signUpFailure')
 def signUpFailure():
     print "eyy"
-    return render_template('signUpFailure.html')  
+    return render_template('signUpFailure.html') 
+
+@app.route('/viewRequests')
+def viewRequests():
+    return render_template('requests.html')  
 
 @app.route('/showDashboard')
 def showDashboard():
