@@ -51,7 +51,7 @@ $(function() {
             data: $('form').serialize(),
             type: 'POST',
             success: function(response) {
-                window.location.href = "/"
+                window.location.href = "/addSkills"
                 console.log(response);
             },
             error: function(error) {
