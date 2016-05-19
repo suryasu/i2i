@@ -570,15 +570,16 @@ def getMyProjects():
 def getAllProjects():
     try:
         if session.get('user'):
-            
             _user = session.get('user')
             con = mysql.connect()
             cursor = con.cursor()
             cursor.callproc('sp_getAllProjects', (_user,))
             result = cursor.fetchall()
  
-            projects_dict = []
+            ranked_projects = []
+            projects_dict = {}
             for proj in result:
+                projects_dict[proj[0]] = proj[6]
                 proj_dict = {
                         'Id': proj[0],
                         'Title': proj[1],
@@ -591,9 +592,45 @@ def getAllProjects():
                         'FilePath': proj[9], 
                         'Like':proj[10], 
                         'HasLiked':proj[11]}
-                projects_dict.append(proj_dict)     
- 
-            return json.dumps(projects_dict)
+                ranked_projects.append(proj_dict) 
+            
+            con2 = mysql.connect()
+            cursor2 = con2.cursor()
+            cursor2.callproc('sp_GetSkillsByUser', (_user,))
+            skills = cursor2.fetchall()[0]
+            print 'Skills'
+            print skills
+            ranks = {}
+            
+            for key, value in projects_dict.iteritems():
+                sum_val = 0
+                split_lst = value.split()
+                print 'Tags'
+                print split_lst
+                for tag in split_lst:
+                    print 'tag'
+                    print tag
+                    print 'skills'
+                    print skills
+                    if tag in skills:
+                        print 'in here'
+                        sum_val += 1
+                ranks[key] = sum_val
+            print 'lwejrios'
+            sorted_ranks = sorted(ranks.items(),key=lambda item:item[1], reverse=True)[:2]
+            print sorted_ranks
+            fin = []
+            for idx in range(0,len(ranked_projects)):
+                if ranked_projects[idx]['Id'] in dict(sorted_ranks).keys():
+                    fin.append(ranked_projects[idx])
+                    #print 'deleted'
+                    #print ranked_projects[idx]['Id']
+                    #print ranked_projects[idx]
+                    #del ranked_projects[idx]
+                    #print ranked_projects
+                    #print 'ater del'
+            #print ranked_projects
+            return json.dumps(fin)
         else:
             con = mysql.connect()
             cursor = con.cursor()
@@ -675,7 +712,11 @@ def signUpSuccess():
 @app.route('/signUpFailure')
 def signUpFailure():
     print "eyy"
-    return render_template('signUpFailure.html')  
+    return render_template('signUpFailure.html') 
+
+@app.route('/viewRequests')
+def viewRequests():
+    return render_template('requests.html')  
 
 @app.route('/showDashboard')
 def showDashboard():

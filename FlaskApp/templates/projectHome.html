@@ -100,7 +100,7 @@
                     // div.append('Project title: ', title, '\n');
                     // div.append('Category: ', category);
                     // div.append('Desired Number of Collaborators: ', numCollaborators);
-                    $('.well').append(div);
+                    $('#projInfo').append(div);
                     
                     },
                     error:function(error){
@@ -127,6 +127,11 @@
         //     var html =    
         //     return mainDiv;
         // }
+        $(document).ready(function(){
+            $('#joinBtn').click(function() {
+                $("#joinBtn").text('Request Sent!');
+            })
+        });
 
     </script>
 
@@ -154,7 +159,12 @@ body {
       </div>
  
       <!-- <div class="jumbotron"> -->
-<div class="well"></div>
+      <div id="projInfo" class="well"> </div>
+      <div class="well">
+        <p> Are you interested in working on this project? Request to join the team.</p>
+        <button id="joinBtn" type="button" class="btn btn-default">Join</button>
+        
+      </div>
 <!--       </div> -->
  
        
