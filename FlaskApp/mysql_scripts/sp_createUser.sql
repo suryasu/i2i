@@ -1,3 +1,5 @@
+DROP procedure IF EXISTS `sp_createUser`;
+
 DELIMITER $$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createUser`(
     IN p_name VARCHAR(255),
