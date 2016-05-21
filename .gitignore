@@ -1,1 +1,14 @@
 *.jpg
+FlaskApp/tbl_user.sql
+
+*.py
+
+FlaskApp/app.py
+
+FlaskApp/mysql_scripts/sp_getSkillsByUser.sql
+
+FlaskApp/tbl_user.sql
+
+FlaskApp/tbl_user.sql
+
+FlaskApp/app.py
