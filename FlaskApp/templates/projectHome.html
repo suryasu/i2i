@@ -19,6 +19,7 @@
         var numCollaborators;
         var description;
         var filepath;
+        var userId;
         $.extend({
           getUrlVars: function(){
             var vars = [], hash;
@@ -204,10 +205,10 @@
             $('#joinBtn').click(function() {
                 $("#joinBtn").text('Request Sent!');
 
-                window.location.href='/userHome';
+                // window.location.href='/userHome';
 
                 $.ajax({
-                    url: '/addRequest',
+                    url: '/addRequest/' + userId + '/' + id + '/' + title,
                     type: 'POST',
                     success: function(response) {
                     //window.location.href = "/addSkills"

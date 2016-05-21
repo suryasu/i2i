@@ -731,15 +731,15 @@ def addUpdateLike():
         conn.close()
 
 
-@app.route('/addRequest', methods=['POST'])
-def addRequest():
+@app.route('/addRequest/<_owner_id>/<_proj_id>/<_title>', methods=['POST'])
+def addRequest(_owner_id, _proj_id, _title):
     try:
         if session.get('user'):
             print 'fsdkjflksd'
             _user = session.get('user')
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_addRequest', (2,3,4, "wejrlwekm"))
+            cursor.callproc('sp_addRequest', (_user, _owner_id, _proj_id, _title))
             print 'added'
             result = cursor.fetchall()
             print result
