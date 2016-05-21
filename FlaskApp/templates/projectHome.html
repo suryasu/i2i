@@ -203,9 +203,26 @@
         $(document).ready(function(){
             $('#joinBtn').click(function() {
                 $("#joinBtn").text('Request Sent!');
+<<<<<<< HEAD
                 window.location.href='/userHome';
+=======
+                $.ajax({
+                    url: '/addRequest',
+                    type: 'POST',
+                    success: function(response) {
+                    window.location.href = "/addSkills"
+                        console.log(response);
+                    },
+                    error: function(error) {
+                    console.log(error);
+                    }
+                });
+
+>>>>>>> 984f6933e4ed99dc394ef1638d67c61ce3bcf0e2
             })
         });
+
+  
 
     </script>
 
@@ -233,12 +250,14 @@ body {
       </div>
  
       <!-- <div class="jumbotron"> -->
+      <form class="form-horizontal" method="post" action="/showSignUp">
       <div id="projInfo" class="well"> </div>
       <div class="well">
         <p> Are you interested in working on this project? Request to join the team.</p>
         <button id="joinBtn" type="button" class="btn btn-default">Join</button>
         
       </div>
+      </form>
 <!--       </div> -->
  
        
