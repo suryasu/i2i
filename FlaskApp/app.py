@@ -735,16 +735,19 @@ def addUpdateLike():
 def addRequest():
     try:
         if session.get('user'):
-            
+            print 'fsdkjflksd'
             _user = session.get('user')
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.callproc('sp_createUser', ("hibye", "hibyebye", "hihi"))
+            print 'added'
             result = cursor.fetchall()
             print result
+            return json.dumps([])
     except Exception as e:
         return render_template('error.html',error = str(e))
     finally:
+        conn.commit()
         cursor.close()
         conn.close()
 
