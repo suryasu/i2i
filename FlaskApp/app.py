@@ -37,6 +37,9 @@ mail = Mail(app)
 
 app.config['UPLOAD_FOLDER'] = 'static/Uploads'
 
+language_lst = ['Java', 'Python', 'C', 'Ruby', 'Hadoop', 'CSS', 'PHP', 'Haskell',\
+'Mysql', 'Mathematica', 'Matlab', 'Solid_Works', 'Cuda', 'Assembly']
+
 def get_cosine(vec1, vec2):
      intersection = set(vec1.keys()) & set(vec2.keys())
      numerator = sum([vec1[x] * vec2[x] for x in intersection])
@@ -60,19 +63,23 @@ def is_number(s):
         return True
     except ValueError:
         return False
+        
+def get_language_name(s, idx):
+    if float(s) == 1:
+        return language_lst[idx]
+    return ''
 
 def matches(text,keywords):
-    #return sum(pearson_correlation(word in text.lower() for word in keywords)
     sum = 0
+    keywords = list(keywords)
+    for idx in range(0,len(language_lst)):
+        l = keywords[len(keywords) - 1 - idx]
+        keywords[len(keywords) - 1 - idx] = get_language_name(l, idx)
+    
     for word in text.lower().split(","):
-        #print 'word'
-        #print word
-        #print keywords
         vector1 = text_to_vector(word)
-        for key in keywords:
-            print 'key'
-            print key
-            if not is_number(key):       
+        for key in keywords:   
+            if not is_number(key): 
                 vector2 = text_to_vector(key.lower())
                 sum += get_cosine(vector1, vector2)
     return sum
@@ -623,10 +630,10 @@ def getAllProjects():
             cursor.callproc('sp_getAllProjects', (_user,))
             result = cursor.fetchall()
  
-            ranked_projects = []
-            projects_dict = {}
+            project_full_info = {}
+            tags_dict = {}
             for proj in result:
-                projects_dict[proj[0]] = proj[6]
+                tags_dict[proj[0]] = proj[6]
                 proj_dict = {
                         'Id': proj[0],
                         'Title': proj[1],
@@ -639,46 +646,22 @@ def getAllProjects():
                         'FilePath': proj[9], 
                         'Like':proj[10], 
                         'HasLiked':proj[11]}
-                ranked_projects.append(proj_dict) 
+                project_full_info[proj[0]] = proj_dict
             
             con2 = mysql.connect()
             cursor2 = con2.cursor()
             cursor2.callproc('sp_GetSkillsByUser', (_user,))
             skills = cursor2.fetchall()[0]
-            print 'Skills'
-            print skills
             ranks = {}
-            print 'here'
-            for key, value in projects_dict.iteritems():
-                #sum_val = 0
-                #split_lst = value.split(",")
-                #print 'Tags'
-                #print split_lst
-                #for tag in split_lst:
-                #    print 'tag'
-                #    print tag
-                #    print 'skills'
-                #    print skills
-                #    if tag in skills:
-                #        print 'in here'
-                #        sum_val += 1
-                print value
+            for key, value in tags_dict.iteritems():
                 ranks[key] = matches(value, skills)
-            print 'lwejrios'
-            sorted_ranks = sorted(ranks.items(),key=lambda item:item[1], reverse=True)[:5]
-            print sorted_ranks
-            fin = []
-            for idx in range(0,len(ranked_projects)):
-                if ranked_projects[idx]['Id'] in dict(sorted_ranks).keys():
-                    fin.append(ranked_projects[idx])
-                    #print 'deleted'
-                    #print ranked_projects[idx]['Id']
-                    #print ranked_projects[idx]
-                    #del ranked_projects[idx]
-                    #print ranked_projects
-                    #print 'ater del'
-            #print ranked_projects
-            return json.dumps(fin)
+            sorted_ranks = sorted(ranks.items(),key=lambda item:item[1], reverse=True)[:100]
+
+            fin_ranks = []
+            for val in sorted_ranks:
+                proj_id = val[0]
+                fin_ranks.append(project_full_info[proj_id])
+            return json.dumps(fin_ranks)
         else:
             con = mysql.connect()
             cursor = con.cursor()
