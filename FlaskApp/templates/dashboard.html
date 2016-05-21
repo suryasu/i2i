@@ -34,9 +34,18 @@ body {
                     var data = JSON.parse(response);
                     var itemsPerRow = 0;
                     var div = $('<div>').attr('class','row');
+                    console.log("Derp");
+                    console.log($_GET);
                     for(var i=0;i<data.length;i++){
-                        console.log(data[i].Title);
+                        //console.log(data[i].UserId);
                         projId = data[i].Id;
+                        _userId = data[i].UserId
+                        // $.ajax({
+                        //     //
+                        //     url: '/getUserNameById',
+                        //     type: 'GET',
+                        //     data:
+                        // });
                         
                         if(itemsPerRow<3){
                             console.log(i);

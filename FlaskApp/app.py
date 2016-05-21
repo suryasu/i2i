@@ -635,6 +635,7 @@ def getAllProjects():
                         'NumCollaborators': proj[4],
                         'Description': proj[5],
                         'Tags': proj[6],
+                        'UserId': proj[7],
                         'DateMade': proj[8],
                         'FilePath': proj[9], 
                         'Like':proj[10], 
@@ -695,6 +696,7 @@ def getAllProjects():
                         'NumCollaborators': proj[4],
                         'Description': proj[5],
                         'Tags': proj[6],
+                        'UserId': proj[7],
                         'DateMade': proj[8],
                         'FilePath': proj[9], 
                         'Like':proj[10], 
@@ -790,6 +792,20 @@ def getMySkills():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+# @app.route('/getUserNameById')
+# def getUserNameById(_id):
+#     try:
+            
+#         con = mysql.connect()
+#         cursor = con.cursor()
+#         cursor.callproc('sp_getUserNameById', (_id,))
+#         result = cursor.fetchall()
+ 
+ 
+#         return json.dumps(result)
+
+#     except Exception as e:
+#         return render_template('error.html', error = str(e))
 
 @app.route('/getClickedProject')
 def getClickedProject():
