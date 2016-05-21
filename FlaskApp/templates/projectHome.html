@@ -54,10 +54,98 @@
                     description = projObj[0]["Description"];
                     tags = projObj[0]["Tags"];
                     filepath = projObj[0]["FilePath"];
-                    console.log(filepath);
+                    userId = projObj[0]["UserId"];
+                    console.log(userId);
                     console.log(numCollaborators)
+                    var userName = getUserName(userId);
+                    // console.log(userName);
+                    // DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath);
 
-                    var div = $('<div>')
+                    // var div = $('<div>')
+                    //     .attr('class', 'da-slider')
+                    //     .attr('class','row');
+                    // div.append(AddImage(filepath));
+                    // // var html = '<div class="da-slide"> <h2>Some headline</h2> <p>Some description</p> </div>'
+                    // var html = '<div class="da-slide"> <h2>'
+                    // // var html = "<div class=\"scenario/images/" + title + "\" />";
+                    // var html2 = '</h2> <p>Some description</p> </div>'
+
+                    // // div.append(html);
+                    // // div.append(title);
+                    // // div.append(html2);
+                    // div.append(
+                    //     "<div class = da-slide>"
+                    //          +"<h2>"
+                    //               +title
+                    //          +"</h2>"
+                    //          +"<p>"
+                    //             +"Category: "
+                    //             + category
+                    //          +"</p>"
+                    //          +"<p>"
+                    //             +"Desired Number of Collaborators: "
+                    //             + numCollaborators
+                    //          +"</p>"
+                    //          +"<p>"
+                    //             +"Expected Completion Time: "
+                    //             + completionTime
+                    //          +"</p>"
+                    //          +"<p>"
+                    //             +"Description: "
+                    //             + description
+                    //          +"</p>"
+                    //          +"<p>"
+                    //             +"Tags: "
+                    //             + tags
+                    //          +"</p>"
+                    //     +"</div>"
+                    // );
+                    
+                    // // div.append('Project title: ', title, '\n');
+                    // // div.append('Category: ', category);
+                    // // div.append('Desired Number of Collaborators: ', numCollaborators);
+                    // $('#projInfo').append(div);
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+        })
+
+        function getUserName(user_id) {
+            $.ajax({
+                url:'/getUserNameById/' + userId,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data2  = JSON.parse(response);
+                    userName = data2[0][0];
+                    console.log("GET USER NAME")
+                    console.log(userName);
+                    DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName);
+
+                    
+                }
+        
+            });
+        }
+        function AddImage(filepath) {
+            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
+            var image = $('<div>').attr('class', 'da-image');
+            var img = $('<img>').attr({
+                'src': filepath,
+                'data-holder-rendered': true,
+                'style': 'height: 150px; width: 150px; display: block'
+            });
+ 
+            image.append(img);
+            mainDiv.append(image);
+            return mainDiv;
+        }
+        function DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName) {
+          // body...
+          var div = $('<div>')
                         .attr('class', 'da-slider')
                         .attr('class','row');
                     div.append(AddImage(filepath));
@@ -74,6 +162,10 @@
                              +"<h2>"
                                   +title
                              +"</h2>"
+                             +"<p>"
+                                +"Created By: "
+                                + userName
+                             +"</p>"
                              +"<p>"
                                 +"Category: "
                                 + category
@@ -101,25 +193,6 @@
                     // div.append('Category: ', category);
                     // div.append('Desired Number of Collaborators: ', numCollaborators);
                     $('#projInfo').append(div);
-                    
-                    },
-                    error:function(error){
-                        console.log(error);
-                    }
-                });
-        })
-        function AddImage(filepath) {
-            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
-            var image = $('<div>').attr('class', 'da-image');
-            var img = $('<img>').attr({
-                'src': filepath,
-                'data-holder-rendered': true,
-                'style': 'height: 150px; width: 150px; display: block'
-            });
- 
-            image.append(img);
-            mainDiv.append(image);
-            return mainDiv;
         }
         // function AddText(title, category, numCollaborators, completionTime, description, tags) {
         //     // body...

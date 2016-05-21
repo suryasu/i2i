@@ -23,9 +23,11 @@ body {
 </style>
  
 <script>
+var _userName;
         $(function(){
             // Store project Id to be used as query string
             var projId;
+            
                 $.ajax({
                     url: '/getAllProjects',
                     type: 'GET',
@@ -34,39 +36,44 @@ body {
                     var data = JSON.parse(response);
                     var itemsPerRow = 0;
                     var div = $('<div>').attr('class','row');
-                    console.log("Derp");
-                    console.log($_GET);
+                    // _userId = data[i].UserId
+                    // $.ajax({
+                    //     url:'/getUserNameById/' + _userId,
+                    //     type: 'GET',
+                    //     success: function(response) {
+                    //         //
+                    //         var data2  = JSON.parse(response);
+                    //         _userName = data2[0][0];
+                    //         console.log(_userName);
+                    //     }
+                    // });
+                    // console.log(data);
                     for(var i=0;i<data.length;i++){
-                        //console.log(data[i].UserId);
-                        projId = data[i].Id;
-                        _userId = data[i].UserId
-                        // $.ajax({
-                        //     //
-                        //     url: '/getUserNameById',
-                        //     type: 'GET',
-                        //     data:
-                        // });
+                        _userId = data[i].UserId;
+                     
+                        getUserName(_userId, data[i], data.length, i, itemsPerRow);
+      
                         
-                        if(itemsPerRow<3){
-                            console.log(i);
-                            if(i==data.length-1){
-                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
-                                $('.well').append(div);
-                            }
-                            else{
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
-                            itemsPerRow++;
-                            }
-                        }
-                        else{
-                            $('.well').append(div);
-                            div = $('<div>').attr('class','row');
-                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
-                            if(i==data.length-1){
-                                $('.well').append(div);
-                            }
-                            itemsPerRow = 0;
-                        }
+                        // if(itemsPerRow<3){
+                        //     // console.log(i);
+                        //     if(i==data.length-1){
+                        //         div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                        //         $('.well').append(div);
+                        //     }
+                        //     else{
+                        //     div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                        //     itemsPerRow++;
+                        //     }
+                        // }
+                        // else{
+                        //     $('.well').append(div);
+                        //     div = $('<div>').attr('class','row');
+                        //     div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                        //     if(i==data.length-1){
+                        //         $('.well').append(div);
+                        //     }
+                        //     itemsPerRow = 0;
+                        // }
                     }
                     
                     },
@@ -98,7 +105,7 @@ body {
                 });
             });
         })
-        function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like, hasLiked){
+        function CreateThumb(id,title,desc,x, y, z, w, d, filepath,like, hasLiked, userName){
             var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
             var thumbNail = $('<div>').attr('class', 'thumbnail');
             var img = $('<img>').attr({
@@ -136,7 +143,7 @@ body {
  
  
             caption.append(title);
-            caption.append(desc);
+            caption.append(userName);
             caption.append(p);
  
             thumbNail.append(img);
@@ -155,7 +162,46 @@ body {
             return mainDiv;
  
  
-}
+        }
+
+        function getUserName(user_id, data, length, i, itemsPerRow) {
+            $.ajax({
+                url:'/getUserNameById/' + _userId,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data2  = JSON.parse(response);
+                    _userName = data2[0][0];
+                    console.log("GET USER NAME")
+                    console.log(_userName);
+                    console.log(data);
+                    var itemsPerRow = 0;
+                    var div = $('<div>').attr('class','row');
+                    if(itemsPerRow<3){
+                            console.log(i);
+                            if(i==length-1){
+                                div.append(CreateThumb(data.Id,data.Title,data.Category,data.CompletionTime,data.NumCollaborators,data.Description,data.Tags,data.DateMade,data.FilePath, data.Like,data.HasLiked, _userName));
+                                $('.well').append(div);
+                            }
+                            else{
+                            div.append(CreateThumb(data.Id,data.Title,data.Category,data.CompletionTime,data.NumCollaborators,data.Description,data.Tags,data.DateMade,data.FilePath, data.Like,data.HasLiked, _userName));
+                            itemsPerRow++;
+                            }
+                        }
+                        $('.well').append(div);
+                        // else{
+                        //     $('.well').append(div);
+                        //     div = $('<div>').attr('class','row');
+                        //     div.append(CreateThumb(data.Id,data.Title,data.Category,data.CompletionTime,data.NumCollaborators,data.Description,data.Tags,data.DateMade,data.FilePath, data.Like,data.HasLiked));
+                        //     if(i==data.length-1){
+                        //         $('.well').append(div);
+                        //     }
+                        //     itemsPerRow = 0;
+                        // }
+                }
+        
+            });
+        }
     </script>
 
     <style>
