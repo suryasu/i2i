@@ -203,8 +203,22 @@
         $(document).ready(function(){
             $('#joinBtn').click(function() {
                 $("#joinBtn").text('Request Sent!');
+                $.ajax({
+                    url: '/addRequest',
+                    type: 'POST',
+                    success: function(response) {
+                    window.location.href = "/addSkills"
+                        console.log(response);
+                    },
+                    error: function(error) {
+                    console.log(error);
+                    }
+                });
+
             })
         });
+
+  
 
     </script>
 
@@ -232,12 +246,14 @@ body {
       </div>
  
       <!-- <div class="jumbotron"> -->
+      <form class="form-horizontal" method="post" action="/showSignUp">
       <div id="projInfo" class="well"> </div>
       <div class="well">
         <p> Are you interested in working on this project? Request to join the team.</p>
         <button id="joinBtn" type="button" class="btn btn-default">Join</button>
         
       </div>
+      </form>
 <!--       </div> -->
  
        

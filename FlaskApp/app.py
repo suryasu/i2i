@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -704,7 +704,7 @@ def addUpdateLike():
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.callproc('sp_AddUpdateLikes',(_projectId,_user,_like))
-            data = cursor.fetchall()
+            data = cursor.findProjectshall()
 
             if len(data) is 0:
                 conn.commit()
@@ -729,6 +729,25 @@ def addUpdateLike():
     finally:
         cursor.close()
         conn.close()
+
+
+@app.route('/addRequest', methods=['POST'])
+def addRequest():
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_createUser', ("hibye", "hibyebye", "hihi"))
+            result = cursor.fetchall()
+            print result
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
 
 @app.route('/findProjects')
 def findProjects():
