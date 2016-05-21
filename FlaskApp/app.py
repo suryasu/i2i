@@ -739,7 +739,7 @@ def addRequest():
             _user = session.get('user')
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_createUser', ("hibye", "hibyebye", "hihi"))
+            cursor.callproc('sp_addRequest', (2,3,4, "wejrlwekm"))
             print 'added'
             result = cursor.fetchall()
             print result

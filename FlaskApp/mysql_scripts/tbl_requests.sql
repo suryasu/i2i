@@ -1,4 +1,4 @@
-CREATE TABLE `requests` (
+CREATE TABLE `tbl_requests` (
   `request_id` INT NOT NULL AUTO_INCREMENT, 
   `user_id` INT, 
   `owner_id` INT, 
