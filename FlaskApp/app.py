@@ -761,6 +761,11 @@ def showDashboard():
 def accountSettings():
     return render_template('accountSettings.html')
 
+@app.route('/userProfile')
+def userProfile():
+    _user_id = request.args.get('user_id')
+    return render_template('userProfile.html')
+
 @app.route('/getMySkills')
 def getMySkills():
     try:
