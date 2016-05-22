@@ -46,3 +46,9 @@ body {
 .row.marketing {
   margin-left: 170px;
 }
+
+#nameWell.well {
+  background-color:transparent !important; 
+  border-style: none; 
+  outline: 0;
+}

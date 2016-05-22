@@ -20,6 +20,7 @@
         var description;
         var filepath;
         var userId;
+        var userName;
         $.extend({
           getUrlVars: function(){
             var vars = [], hash;
@@ -47,7 +48,7 @@
                     success:function(response) {
                     console.log(response);
                     var projObj = JSON.parse(response);
-                    console.log(projObj);
+                    // console.log(projObj);
                     title = projObj[0]["Title"];
                     category = projObj[0]["Category"];
                     numCollaborators = projObj[0]["NumCollaborators"];
@@ -57,55 +58,8 @@
                     filepath = projObj[0]["FilePath"];
                     userId = projObj[0]["UserId"];
                     console.log(userId);
-                    console.log(numCollaborators)
-                    var userName = getUserName(userId);
-                    // console.log(userName);
-                    // DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath);
-
-                    // var div = $('<div>')
-                    //     .attr('class', 'da-slider')
-                    //     .attr('class','row');
-                    // div.append(AddImage(filepath));
-                    // // var html = '<div class="da-slide"> <h2>Some headline</h2> <p>Some description</p> </div>'
-                    // var html = '<div class="da-slide"> <h2>'
-                    // // var html = "<div class=\"scenario/images/" + title + "\" />";
-                    // var html2 = '</h2> <p>Some description</p> </div>'
-
-                    // // div.append(html);
-                    // // div.append(title);
-                    // // div.append(html2);
-                    // div.append(
-                    //     "<div class = da-slide>"
-                    //          +"<h2>"
-                    //               +title
-                    //          +"</h2>"
-                    //          +"<p>"
-                    //             +"Category: "
-                    //             + category
-                    //          +"</p>"
-                    //          +"<p>"
-                    //             +"Desired Number of Collaborators: "
-                    //             + numCollaborators
-                    //          +"</p>"
-                    //          +"<p>"
-                    //             +"Expected Completion Time: "
-                    //             + completionTime
-                    //          +"</p>"
-                    //          +"<p>"
-                    //             +"Description: "
-                    //             + description
-                    //          +"</p>"
-                    //          +"<p>"
-                    //             +"Tags: "
-                    //             + tags
-                    //          +"</p>"
-                    //     +"</div>"
-                    // );
-                    
-                    // // div.append('Project title: ', title, '\n');
-                    // // div.append('Category: ', category);
-                    // // div.append('Desired Number of Collaborators: ', numCollaborators);
-                    // $('#projInfo').append(div);
+                    userName = getUserName(userId);
+       
                     
                     },
                     error:function(error){
@@ -124,7 +78,7 @@
                     userName = data2[0][0];
                     console.log("GET USER NAME")
                     console.log(userName);
-                    DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName);
+                    DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName, user_id);
 
                     
                 }
@@ -144,20 +98,21 @@
             mainDiv.append(image);
             return mainDiv;
         }
-        function DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName) {
+        function DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName, user_id) {
           // body...
           var div = $('<div>')
                         .attr('class', 'da-slider')
                         .attr('class','row');
                     div.append(AddImage(filepath));
-                    // var html = '<div class="da-slide"> <h2>Some headline</h2> <p>Some description</p> </div>'
+                    console.log("user id");
+                    console.log(user_id);
                     var html = '<div class="da-slide"> <h2>'
-                    // var html = "<div class=\"scenario/images/" + title + "\" />";
                     var html2 = '</h2> <p>Some description</p> </div>'
+                    // var creator = "Creator: " + userName;
+                    // var name = $('<p>').text(creator);
+                    // var link = "<a href='/userProfile?user_id='" + user_id + ">"
+                    // console.log(link);
 
-                    // div.append(html);
-                    // div.append(title);
-                    // div.append(html2);
                     div.append(
                         "<div class = da-slide>"
                              +"<h2>"
@@ -165,9 +120,12 @@
                              +"</h2>"
                              +"<p>"
                                 +"Created By: "
+                                + "<a id = user_name href='#'>"
                                 + userName
-                             +"</p>"
-                             +"<p>"
+                                + "</a>"
+                             +"</p>");
+                    // div.append(name);
+                    div.append("<p>"
                                 +"Category: "
                                 + category
                              +"</p>"
@@ -190,28 +148,21 @@
                         +"</div>"
                     );
                     
-                    // div.append('Project title: ', title, '\n');
-                    // div.append('Category: ', category);
-                    // div.append('Desired Number of Collaborators: ', numCollaborators);
                     $('#projInfo').append(div);
+                    $('#user_name').click(function() {
+                        console.log("clicked name");
+                        window.location.href = '/userProfile?user_id=' + user_id;
+                    });
         }
-        // function AddText(title, category, numCollaborators, completionTime, description, tags) {
-        //     // body...
-        //     var mainDiv = $('<div>').attr('class', 'da-slide');
-        //     var html =    
-        //     return mainDiv;
-        // }
+
         $(document).ready(function(){
             $('#joinBtn').click(function() {
                 $("#joinBtn").text('Request Sent!');
-
-                // window.location.href='/userHome';
 
                 $.ajax({
                     url: '/addRequest/' + userId + '/' + id + '/' + title,
                     type: 'POST',
                     success: function(response) {
-                    //window.location.href = "/addSkills"
                         console.log(response);
                     },
                     error: function(error) {
@@ -221,6 +172,7 @@
 
             })
         });
+        
 
   
 

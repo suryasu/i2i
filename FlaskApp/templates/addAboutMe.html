@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>i2i | Add Description</title>
+
+
+ 
+ 
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/createproj.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+    <script src="../static/js/jquery-1.12.3.min.js"></script>
+
+    <script src="../static/js/jquery.ui.widget.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload-process.js"></script>
+ 
+    <script type="text/javascript" src="../static/js/jquery.fileupload-ui.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    
+         <script>
+        $(function() {
+            $('#fileupload').fileupload({
+                url: 'upload',
+                dataType: 'json',
+                add: function(e, data) {
+                    data.submit();
+                },
+                success: function(response, status) {
+                    var filePath = 'static/Uploads/' + response.filename;
+                    $('#imgUpload').attr('src',filePath);
+                    $('#filePath').val(filePath);
+                    console.log(response);
+                },
+                 error: function(error) {
+                    console.log(error);
+                }
+            });
+        })
+        </script>
+ 
+</head>
+ 
+<style>
+body {
+    background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   -webkit-background-size: cover;
+}
+</style>
+
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="/">Home</a>
+                    <li role="presentation"><a href="/userHome">User</a>
+                    </li>
+                    <li role="presentation"><a href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">i2i</h3>
+        </div>
+
+        <section>
+            <form class="form-horizontal" method="post" action="/addProject">
+                <fieldset>
+ 
+                    <!-- Form Name -->
+                    <legend><center>Create Your Profile</center></legend>
+ 
+                    <!-- Text input-->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="txtName"></label>
+                        <div class="col-md-5">
+                            <input id="txtName" name="inputName" type="text" class="form-control input-md" placeholder="Name">
+                        </div>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="txtTitle"></label>
+                        <div class="col-md-5">
+                            <select class="form-control" name="inputEducation">
+                                <option selected disabled>Education Level</option>
+                                <option value="High school or less">High school or less</option>
+                                <option value="High school diploma">High school diploma</option>
+                                <option value="Some college">Some college</option>
+                                <option value="Associate degree or equivalent">Associate degree or equivalent</option>
+                                <option value="Bachelor's degree or equivalent">Bachelor's degree or equivalent</option>
+                                <option value="Master's degree or equivalent">Master's degree or equivalent</option>
+                                <option value="Doctoral degree">Doctoral degree</option>
+                            </select>
+                        </div>
+
+                    </div>
+  
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="txtPost"></label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="txtPost" name="inputDescription" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Textarea -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="txtPost"></label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="txtPost" name="inputTags" placeholder="Project Tags"></textarea>
+                        </div>
+                    </div>
+
+<div class="form-group">
+  <label for="txtPost">Add a profile photo</label>
+                     
+<div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&hellip; <input type="file" id="fileupload" name="file" multiple>
+                    </span>
+                </span>
+        <div class="pull-right">
+                <img  id="imgUpload" style="width: 140px; height: 140px;" class="img-thumbnail"><input type="hidden" name="filePath" id="filePath"></input>
+        </div>
+            </div>
+  
+</div>
+ 
+                    <!-- Button -->
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="singlebutton"></label>
+                        <div class="col-md-4">
+                            <input id="singlebutton" name="singlebutton" class="btn btn-primary" type="submit" value="Publish" />
+                        </div>
+                    </div>
+
+
+
+ 
+                </fieldset>
+            </form>
+ 
+        </section>
+        <footer class="footer">
+            <p>&copy; i2i 2016</p>
+        </footer>
+ 
+    </div>
+</body>
+ 
+</html>

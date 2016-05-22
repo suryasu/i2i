@@ -51,7 +51,7 @@ var _userName;
                     for(var i=0;i<data.length;i++){
                         _userId = data[i].UserId;
                      
-                        getUserName(_userId, data[i], data.length, i, itemsPerRow);
+                        getUserName(_userId, data[i], data.length, i, itemsPerRow, div);
       
                         
                         // if(itemsPerRow<3){
@@ -164,7 +164,7 @@ var _userName;
  
         }
 
-        function getUserName(user_id, data, length, i, itemsPerRow) {
+        function getUserName(user_id, data, length, i, itemsPerRow, div) {
             $.ajax({
                 url:'/getUserNameById/' + _userId,
                 type: 'GET',
@@ -176,7 +176,7 @@ var _userName;
                     console.log(_userName);
                     console.log(data);
                     var itemsPerRow = 0;
-                    var div = $('<div>').attr('class','row');
+                    // var div = $('<div>').attr('class','row');
                     if(itemsPerRow<3){
                             console.log(i);
                             if(i==length-1){
@@ -188,16 +188,16 @@ var _userName;
                             itemsPerRow++;
                             }
                         }
-                        $('.well').append(div);
-                        // else{
-                        //     $('.well').append(div);
-                        //     div = $('<div>').attr('class','row');
-                        //     div.append(CreateThumb(data.Id,data.Title,data.Category,data.CompletionTime,data.NumCollaborators,data.Description,data.Tags,data.DateMade,data.FilePath, data.Like,data.HasLiked));
-                        //     if(i==data.length-1){
-                        //         $('.well').append(div);
-                        //     }
-                        //     itemsPerRow = 0;
-                        // }
+                        // $('.well').append(div);
+                        else{
+                            $('.well').append(div);
+                            div = $('<div>').attr('class','row');
+                            div.append(CreateThumb(data.Id,data.Title,data.Category,data.CompletionTime,data.NumCollaborators,data.Description,data.Tags,data.DateMade,data.FilePath, data.Like,data.HasLiked));
+                            if(i==data.length-1){
+                                $('.well').append(div);
+                            }
+                            itemsPerRow = 0;
+                        }
                 }
         
             });
@@ -252,7 +252,7 @@ var _userName;
     
 
       <footer class="footer">
-        <p>&copy; Company 2015</p>
+        <p>&copy; i2i 2016</p>
       </footer>
 
     </div>

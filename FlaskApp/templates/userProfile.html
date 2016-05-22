@@ -10,6 +10,216 @@
     <link href="../static/signup.css" rel="stylesheet">
     
   </head>
+  <script src="../static/js/jquery-1.12.3.min.js"></script>
+  <script>
+
+    $.extend({
+          getUrlVars: function(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+              hash = hashes[i].split('=');
+              vars.push(hash[0]);
+              vars[hash[0]] = hash[1];
+            }
+            return vars;
+          },
+          getUrlVar: function(name){
+            return $.getUrlVars()[name];
+          }
+        });
+    var user_id = $.getUrlVar('user_id');
+    console.log(user_id);
+    $(function(){
+            // Store project Id to be used as query string
+            var projId;
+                $.ajax({
+                     url:'/getUserNameById/' + user_id,
+                    type: 'GET',
+                    success:function(response) {
+                        var data2  = JSON.parse(response);
+                        _userName = data2[0][0];
+                        console.log("GET USER NAME")
+                        console.log(_userName);
+                        var div = $('<div>').attr('class','da-slider');
+                        var bigname = "<h2>" +_userName +"</h2>";
+                        div.append(bigname);
+                        $('#nameWell').append(div);
+                        var userProjects = _userName + "'s Projects";
+                        var projects = $('<h3>').text(userProjects);
+                        $('#userProjects').append(projects);
+                        getUsersProjects(user_id)
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+        })
+    function getUsersProjects(user_id) {
+        // body...
+        $.ajax({
+            url: '/getProjByUser/' + user_id,
+            type: 'GET',
+            success:function(response) {
+                var data  = JSON.parse(response);
+                var div = $('<div>').attr('class','da-slider');
+                
+                for(var i=0;i<data.length;i++){
+                    // console.log(data[i].Title);
+                    // console.log(data[i].Id);
+                    var title = data[i].Title;
+                    var projId = data[i].Id;
+                    div.append("<p>" + title + "</p>");
+                    // var titleid = "title" + i;
+                    // console.log(titleid);
+                    // div.append("<a id=" + id + " href=#>" + title + "</a>");
+                    // div.append("<p><a id=titleid href=#>" + title + "</a>");
+                    // console.log("<p><a id="+titleid +" href=#>" + title + "</a>")
+                    $('#projectsWell').append(div);
+                    // $(document).on("click", '#'+titleid, function()
+                    // {
+                    //     console.log("Left click");
+                    // })
+                    // $('#title' + i).click(function() {
+                    //     console.log("clicked");
+                    //     window.location.href = '/projectHome?proj_id=' + projId;
+                    // })
+
+                }
+                getUsersSkills(user_id);
+            }
+        });
+    }
+    function getUsersSkills(user_id) {
+        ///
+        $.ajax({
+                    url: '/getSkillsByUser/' + user_id,
+                    type: 'GET',
+                    success:function(response) {
+                    console.log(user_id);
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    // var _user_id = data[0][0];
+                    var _skill1 = data[0][1];
+                    var _skill2 = data[0][2];
+                    var _skill3 = data[0][3];
+                    var _skill4 = data[0][4];
+                    var _skill5 = data[0][5];
+                    
+                    var skilldiv = $('<div>').attr('class','da-slider');
+                    skilldiv.append(
+                        "<div class = da-slide>"
+                             // +"<h2>"
+                             //      +"Skills    "
+                             //      + '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>'
+                             // +"</h2>"
+                             +"<p>"
+                                + _skill1
+                             +"</p>"
+                             +"<p>"
+                                + _skill2
+                             +"</p>"
+                             +"<p>"
+                                + _skill3
+                             +"</p>"
+                             +"<p>"
+                                + _skill4
+                             +"</p>"
+                             +"<p>"
+                                + _skill5
+                             +"</p>"
+                             // +"<h2>"
+                             //      +"Languages    "
+                             //      + '<button type="button" id="editLanguages" class="btn btn-default"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>'
+                             // +"</h2>"
+        
+                    );
+                    skilldiv.append(+"</div>");
+                    $('#skillWell').append(skilldiv);
+                    var langdiv = $('<div>').attr('class','da-slider');
+                    langdiv.append(
+                        "<div class = da-slide>"
+                    );
+                    if (data[0][7] == 1) {
+                        langdiv.append("<p>"
+                                + "Java"
+                             +"</p>");
+                    }
+                    if (data[0][8] == 1) {
+                        langdiv.append("<p>"
+                                + "Python"
+                             +"</p>");
+                    }
+                    if (data[0][9] == 1) {
+                        langdiv.append("<p>"
+                                + "C/C++"
+                             +"</p>");
+                    }
+                    if (data[0][10] == 1) {
+                        langdiv.append("<p>"
+                                + "Ruby"
+                             +"</p>");
+                    }
+                    if (data[0][11] == 1) {
+                        langdiv.append("<p>"
+                                + "Hadoop"
+                             +"</p>");
+                    }
+                    if (data[0][12] == 1) {
+                        langdiv.append("<p>"
+                                + "CSS"
+                             +"</p>");
+                    }
+                    if (data[0][13] == 1) {
+                        langdiv.append("<p>"
+                                + "PHP"
+                             +"</p>");
+                    }
+                    if (data[0][14] == 1) {
+                        langdiv.append("<p>"
+                                + "Haskell"
+                             +"</p>");
+                    }
+                    if (data[0][15] == 1) {
+                        langdiv.append("<p>"
+                                + "Mysql"
+                             +"</p>");
+                    }
+                    if (data[0][16] == 1) {
+                        langdiv.append("<p>"
+                                + "Mathematica"
+                             +"</p>");
+                    }
+                    if (data[0][17] == 1) {
+                        langdiv.append("<p>"
+                                + "Matlab"
+                             +"</p>");
+                    }
+                    if (data[0][18] == 1) {
+                        langdiv.append("<p>"
+                                + "Solid Works"
+                             +"</p>");
+                    }
+                    if (data[0][19] == 1) {
+                        langdiv.append("<p>"
+                                + "Cuda"
+                             +"</p>");
+                    }
+                    if (data[0][20] == 1) {
+                        langdiv.append("<p>"
+                                + "Assembly"
+                             +"</p>");
+                    }
+
+                    langdiv.append(+"</div>");
+                    $('#langWell').append(langdiv);
+                }
+            })
+    }
+  </script>
  
 <style>
 body {
@@ -34,15 +244,22 @@ body {
         <h3 class="text-muted">I2I</h3>
       </div>
  
-      <div class="jumbotron">
+<!--       <div class="jumbotron">
         <h1><center>User Profile</center></h1>
 
-      </form>
-      </div>
+      </div> -->
       <div class="row marketing">
             <div class="col-lg-6">
+                <div class="well" id="nameWell"></div>
+                <h3>About</h3>
+                <div class="well" id="aboutWell"></div>
+                <h3>Skills</h3>
+                <div class="well" id="skillWell"></div>
+                <h3>Languages</h3>
+                <div class="well" id="langWell"></div>
+                <h3 id=userProjects></h3>
+                <div class="well" id="projectsWell"></div>
 
-                <center><p>Coming soon.</p></center>
 
             </div>
  

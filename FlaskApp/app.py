@@ -138,7 +138,8 @@ def signUp():
             return render_template('addSkills.html')
         else:
             # return render_template('findProjects.html')
-            return json.dumps({'error':str(data[0])})
+            return render_template('signUpFailure.html')
+            # return json.dumps({'error':str(data[0])})
         
 
     else:
@@ -622,6 +623,44 @@ def getMyProjects():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+@app.route('/getProjByUser/<_user_id>')
+def getProjByUser(_user_id):
+    try:
+            
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_getProjByUser', (_user_id,))
+        result = cursor.fetchall()
+        projects_dict = []
+        for proj in result:
+            proj_dict= {
+                'Id': proj[0],
+                'Title': proj[1]
+            }
+            projects_dict.append(proj_dict)
+ 
+ 
+        return json.dumps(projects_dict)
+        # return json.dumps(result)
+
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+@app.route('/getSkillsByUser/<_user_id>')
+def getSkillsByUser(_user_id):
+    try:
+            
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_getSkillsByUser', (_user_id,))
+        result = cursor.fetchall()
+ 
+ 
+        return json.dumps(result)
+
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/getAllProjects')
 def getAllProjects():
     try:
@@ -847,6 +886,13 @@ def getClickedProject():
  
     return json.dumps(projects_dict)
 
+@app.route('/addAboutMe')
+def addAboutMe():
+    if session.get('user'):
+        return render_template('addAboutMe.html');
+    else:
+        return render_template('error.html',error = 'Unauthorized Access')
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
