@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>i2i | Account Settings</title>
+    <title>i2i | View Requests</title>
  
     
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,118 +29,141 @@ body {
                     url: '/getIncomRequests',
                     type: 'GET',
                     success:function(response) {
-                    console.log(response);
+                    // console.log(response);
                     var data = JSON.parse(response);
 
                     for (var i = 0; i <data.length; i++) {
-                        console.log(data[0]["ProjectTitle"]);
-                        var _request_id = data[i][0];
+                        var _request_id = data[i]["ID"];
+                        var _sender_id = data[i]["RequesterID"];
                         var _project_title = data[i]["ProjectTitle"];
-
-                  
-                  
-                        var incomdiv = $('<div>').attr('class','da-slider');
-                        incomdiv.append(
+                        displayIncomingRequests(_sender_id, _project_title, _request_id);
+        
+                    }
+                    getSentRequests();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        })
+        function displayIncomingRequests(user_id, _project_title, _request_id) {
+            $.ajax({
+                url:'/getUserNameById/' + user_id,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data2  = JSON.parse(response);
+                    userName = data2[0][0];
+        
+                    var incomdiv = $('<div>').attr('class','da-slider');
+                    var reqdiv = $('<div>').attr('class', 'da-slider');
+                    reqdiv.append(
                             "<div class = da-slide>"
-                //              // +"<h2>"
-                //              //      +"Skills    "
-                //              //      + '<button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>'
-                //              // +"</h2>"
+
                                 +"<p>"
+                                    + userName
+                                    + " requests to join your project: "
                                     + _project_title
                                 +"</p>"
-              
-        
+       
                         );
-                        incomdiv.append(+"</div>");
+                    reqdiv.append("<button type='button' onclick=acceptReq(" + _request_id + ")>Accept</button>");
+                    reqdiv.append("<button type='button' onclick=declineReq(" + _request_id + ")>Decline</button>");
+                    reqdiv.append(+"</div>");
+                    incomdiv.append(reqdiv);
+                    $('#incomWell').append(incomdiv);
 
-                //     var langdiv = $('<div>').attr('class','da-slider');
-                //     langdiv.append(
-                //         "<div class = da-slide>"
-                //     );
-                //     if (data[0][7] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Java"
-                //              +"</p>");
-                //     }
-                //     if (data[0][8] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Python"
-                //              +"</p>");
-                //     }
-                //     if (data[0][9] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "C/C++"
-                //              +"</p>");
-                //     }
-                //     if (data[0][10] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Ruby"
-                //              +"</p>");
-                //     }
-                //     if (data[0][11] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Hadoop"
-                //              +"</p>");
-                //     }
-                //     if (data[0][12] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "CSS"
-                //              +"</p>");
-                //     }
-                //     if (data[0][13] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "PHP"
-                //              +"</p>");
-                //     }
-                //     if (data[0][14] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Haskell"
-                //              +"</p>");
-                //     }
-                //     if (data[0][15] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Mysql"
-                //              +"</p>");
-                //     }
-                //     if (data[0][16] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Mathematica"
-                //              +"</p>");
-                //     }
-                //     if (data[0][17] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Matlab"
-                //              +"</p>");
-                //     }
-                //     if (data[0][18] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Solid Works"
-                //              +"</p>");
-                //     }
-                //     if (data[0][19] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Cuda"
-                //              +"</p>");
-                //     }
-                //     if (data[0][20] == 1) {
-                //         langdiv.append("<p>"
-                //                 + "Assembly"
-                //              +"</p>");
-                //     }
-
-                //     langdiv.append(+"</div>");
-
-                        $('#incomWell').append(incomdiv);
-                //     $('#langWell').append(langdiv);
-                            }
                     
-                      }
-                //     error:function(error){
-                //         console.log(error);
-                //     }
-                    });
-        })
+                }
+        
+            });
+        }
+
+        function displaySentRequests(user_id, _project_title, _request_id) {
+            $.ajax({
+                url:'/getUserNameById/' + user_id,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data2  = JSON.parse(response);
+                    userName = data2[0][0];
+        
+                    var sentdiv = $('<div>').attr('class','da-slider');
+                    var reqdiv = $('<div>').attr('class', 'da-slider');
+                    reqdiv.append(
+                            "<div class = da-slide>"
+
+                                +"<p>"
+                                    + "You requested to join "
+                                    + userName
+                                    + "'s project: "
+                                    + _project_title
+                                // +"</p>"
+       
+                        );
+                    reqdiv.append("<button type='button' onclick=cancelReq(" + _request_id + ")>Cancel request</button></p>");
+
+                    reqdiv.append(+"</div>");
+                    sentdiv.append(reqdiv);
+                    $('#sentWell').append(sentdiv);
+
+                    
+                }
+        
+            });
+        }
+
+        function getSentRequests() {
+            // body...
+            $.ajax({
+                url: '/getSentRequests',
+                type: 'GET',
+                success:function(response) {
+                    // console.log(response);
+                    var data = JSON.parse(response);
+
+                    for (var i = 0; i <data.length; i++) {
+                        var _request_id = data[i]["ID"];
+                        // console.log(_request_id);
+                        var _owner_id = data[i]["OwnerID"];
+                        var _project_title = data[i]["ProjectTitle"];
+                        displaySentRequests(_owner_id, _project_title, _request_id);
+
+            
+                    }
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function cancelReq(_request_id) {
+            console.log("Canceled request: ", _request_id);
+            $.ajax({
+                url: '/deleteRequest/' + _request_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function acceptReq(_request_id) {
+            // body...
+            console.log("Accept request: ", _request_id);
+        }
+
+        function declineReq(_request_id) {
+            // body...
+            console.log("Declined request: ", _request_id);
+        }
 
     </script>
  
@@ -156,31 +179,20 @@ body {
         <h3 class="text-muted">I2I</h3>
       </div>
  
-<!--       <div class="jumbotron">
-        <h2><center>Account Settings</center></h2>
 
-      </form>
-      </div> -->
       <div class="row marketing">
             <div class="col-lg-6">
-            <h2><center>Account Settings</center></h2>
+            <h2><center>My Requests</center></h2>
             <h3>Incoming Requests</h3>
-            <button id="editSkills" type="button" class="btn btn-default" onClick="window.location='/editSkills'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
             <div class="well" id="incomWell">
 
             </div>
 
-            <h3>Languages</h3>
-            <button id="editSkills" type="button" class="btn btn-default" onClick="window.location='/editLanguages'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
-            <div class="well" id="langWell">
+            <h3>Sent Requests</h3>
+            <div class="well" id="sentWell">
 
             </div>
 
-
-            <!-- <button type="button" class="btn btn-default btn-lg">
-              <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Star
-            </button>
- -->
             </div>
  
         </div>
