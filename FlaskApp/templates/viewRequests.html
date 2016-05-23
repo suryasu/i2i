@@ -156,13 +156,25 @@ body {
         }
 
         function acceptReq(_request_id) {
-            // body...
+            
             console.log("Accept request: ", _request_id);
         }
 
         function declineReq(_request_id) {
-            // body...
             console.log("Declined request: ", _request_id);
+            $.ajax({
+                url: '/deleteRequest/' + _request_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log("hi")
+                    console.log(response);
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+            
         }
 
     </script>

@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -846,9 +846,10 @@ def addRequest(_owner_id, _proj_id, _title):
 def deleteRequest(_request_id):
     try:
         if session.get('user'):
+            print "hi"
             conn = mysql.connect()
             cursor = conn.cursor()
-            cursor.callproc('sp_deleteRequest', _request_id)
+            cursor.callproc('sp_deleteRequest', [_request_id])
             result = cursor.fetchall()
             print result
             return json.dumps([])
