@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -623,6 +623,33 @@ def getMyProjects():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+@app.route('/getIncomRequests')
+def getIncomRequests():
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetRequestByOwner', (_user,))
+            result = cursor.fetchall()
+ 
+            requests_dict = []
+            for request in result:
+                request_dict = {
+                        'ID': request[0],
+                        'RequesterID': request[1],
+                        'OwnerID': request[2],
+                        'ProjectID': request[3], 
+                        'ProjectTitle': request[4]
+                    }
+                requests_dict.append(request_dict)      
+            return json.dumps(requests_dict)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+
+
 @app.route('/getProjByUser/<_user_id>')
 def getProjByUser(_user_id):
     try:
@@ -812,7 +839,7 @@ def signUpFailure():
 
 @app.route('/viewRequests')
 def viewRequests():
-    return render_template('requests.html')  
+    return render_template('viewRequests.html')  
 
 @app.route('/showDashboard')
 def showDashboard():
