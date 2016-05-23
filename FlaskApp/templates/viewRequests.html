@@ -107,7 +107,7 @@ body {
                     reqdiv.append(+"</div>");
                     sentdiv.append(reqdiv);
                     $('#sentWell').append(sentdiv);
-
+                    getNotifications();
                     
                 }
         
@@ -147,6 +147,7 @@ body {
                 type: 'POST',
                 success:function(response) {
                     console.log(response);
+                    location.reload();
                     
                 },
                 error:function(error){
@@ -158,16 +159,47 @@ body {
         function acceptReq(_request_id) {
             
             console.log("Accept request: ", _request_id);
+            $.ajax({
+                url: '/getRequestById/' + _request_id,
+                type: 'GET',
+                success:function(response) {
+                    console.log(response);
+                    data = JSON.parse(response);
+                    console.log(data);
+                    var _request_id = data[0]["ReqID"];
+                    var _owner_id = data[0]["OwnerID"];
+                    var _user_id = data[0]["UserID"];
+                    var _proj_id = data[0]["ProjID"];
+                    var _proj_title = data[0]["ProjTitle"];
+                    var _type = "accept";
+
+                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
         }
 
         function declineReq(_request_id) {
             console.log("Declined request: ", _request_id);
+            // Get information about request
             $.ajax({
-                url: '/deleteRequest/' + _request_id,
-                type: 'POST',
+                url: '/getRequestById/' + _request_id,
+                type: 'GET',
                 success:function(response) {
-                    console.log("hi")
                     console.log(response);
+                    data = JSON.parse(response);
+                    console.log(data);
+                    var _request_id = data[0]["ReqID"];
+                    var _owner_id = data[0]["OwnerID"];
+                    var _user_id = data[0]["UserID"];
+                    var _proj_id = data[0]["ProjID"];
+                    var _proj_title = data[0]["ProjTitle"];
+                    var _type = "decline";
+
+                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
                     
                 },
                 error:function(error){
@@ -175,6 +207,96 @@ body {
                 }
             });
             
+        }
+
+        function addNotification(_request_id, _user_id, _sender_id, _proj_id, _proj_title, _type) {
+            // body...
+            $.ajax({
+                url: '/addNotification/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    cancelReq(_request_id);
+                 
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function getNotifications(_user_id) {
+            // body...
+            $.ajax({
+                url: '/getNotifications',
+                type: 'GET',
+                success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+
+
+                    for (var i = 0; i <data.length; i++) {
+                        var _notif_id = data[i]["NotifID"];
+                        // console.log(_request_id);
+                        var _user_id = data[i]["UserID"];
+                        var _sender_id = data[i]["SenderID"];
+                        var _proj_id= data[i]["ProjectID"];
+                        var _project_title = data[i]["ProjectTitle"];
+                        console.log(_project_title)
+                        var _notif_type = data[i]["NotifType"];
+                        displayNotifications(_sender_id, _project_title, _notif_type, _notif_id);
+
+            
+                    }
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function displayNotifications(_sender_id, _project_title, _notif_type, _notif_id) {
+            // body...
+            var type = _notif_type;
+            var notif;
+            if (type == "decline") {
+                //
+                // notif = _sender_id + " declined your request to join " + _project_title;
+                notif = "Your request to join " + _project_title + " was declined.";
+            }
+            else if (type == "accept") {
+                //
+                // notif = _sender_id + " approved your request to join " + _project_title;
+                notif = "Your request to join " + _project_title + " was approved.";
+            }
+            var notifdiv = $('<div>').attr('class','da-slider');
+            var notdiv = $('<div>').attr('class', 'da-slider');
+                    notdiv.append(notif);
+                    notdiv.append("<button type='button' onclick=deleteNotif(" + _notif_id + ")>Mark as Seen</button></p>");
+
+                    // reqdiv.append(+"</div>");
+                    notifdiv.append(notdiv);
+                    $('#notifWell').append(notifdiv);
+
+            
+        }
+        function deleteNotif(_notif_id) {
+            // body...
+            console.log("Deleted Notification: ", _notif_id);
+            $.ajax({
+                url: '/deleteNotification/' + _notif_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
         }
 
     </script>
@@ -195,6 +317,10 @@ body {
       <div class="row marketing">
             <div class="col-lg-6">
             <h2><center>My Requests</center></h2>
+            <h3>Status Updates</h3>
+            <div class="well" id="notifWell">
+
+            </div>
             <h3>Incoming Requests</h3>
             <div class="well" id="incomWell">
 

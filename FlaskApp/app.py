@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'bucketlist'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -674,6 +674,32 @@ def getSentRequests():
         return render_template('error.html', error = str(e))
 
 
+@app.route('/getNotifications')
+def getNotifications():
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetNotifications', (_user,))
+            result = cursor.fetchall()
+ 
+            notif_dict = []
+            for notif in result:
+                notif_info = {
+                        'NotifID': notif[0],
+                        'UserID': notif[1],
+                        'SenderID': notif[2],
+                        'ProjectID': notif[3], 
+                        'ProjectTitle': notif[4],
+                        'NotifType': notif[5]
+                    }
+                notif_dict.append(notif_info)      
+            return json.dumps(notif_dict)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/getProjByUser/<_user_id>')
 def getProjByUser(_user_id):
     try:
@@ -842,6 +868,25 @@ def addRequest(_owner_id, _proj_id, _title):
         conn.close()
 
 
+@app.route('/addNotification/<_user_id>/<_sender_id>/<_proj_id>/<_title>/<_type>', methods=['POST'])
+def addNotification(_user_id, _sender_id, _proj_id, _title, _type):
+    try:
+        if session.get('user'):
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            # cursor.callproc('sp_addNotification', (500, 500, 500, "bleh", "decline"))
+            cursor.callproc('sp_addNotification', (_user_id, _sender_id, _proj_id, _title, _type))
+            result = cursor.fetchall()
+            print result
+            return json.dumps([])
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
 @app.route('/deleteRequest/<_request_id>', methods=['POST'])
 def deleteRequest(_request_id):
     try:
@@ -857,6 +902,52 @@ def deleteRequest(_request_id):
         return render_template('error.html',error = str(e))
     finally:
         conn.commit()
+        cursor.close()
+        conn.close()
+
+@app.route('/deleteNotification/<_notif_id>', methods=['POST'])
+def deleteNotification(_notif_id):
+    try:
+        if session.get('user'):
+            print "hi"
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_deleteNotification', [_notif_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps([])
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+@app.route('/getRequestById/<_request_id>', methods=['GET'])
+def getRequestById(_request_id):
+    try:
+        if session.get('user'):
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_getRequestById', [_request_id])
+            result = cursor.fetchall()
+            request_info = []
+            for req in result:
+                req_dict= {
+                    'ReqID': req[0],
+                    'UserID': req[1],
+                    'OwnerID': req[2],
+                    'ProjID': req[3],
+                    'ProjTitle': req[4]
+                }
+            request_info.append(req_dict)
+ 
+ 
+        return json.dumps(request_info)
+
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
         cursor.close()
         conn.close()
 
