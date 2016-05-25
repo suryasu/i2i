@@ -18,18 +18,11 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'jordanbonilla'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 
-# email server
-MAIL_SERVER = 'smtp.googlemail.com'
-MAIL_PORT = 465
-MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_USERNAME = 'jagrawal268'
-MAIL_PASSWORD = 'Ignou123'
 
 # administrator list
 ADMINS = ['jagrawal268@gmail.com']
@@ -886,6 +879,27 @@ def addNotification(_user_id, _sender_id, _proj_id, _title, _type):
         cursor.close()
         conn.close()
 
+@app.route('/incNumCollab/<_proj_id>', methods=['POST'])
+def incNumCollab(_proj_id):
+    try:
+        if session.get('user'):
+            print "hi"
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_IncNumCollab', [_proj_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps([])
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
+
+
 
 @app.route('/deleteRequest/<_request_id>', methods=['POST'])
 def deleteRequest(_request_id):
@@ -1056,4 +1070,4 @@ def addAboutMe():
     
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=9000)
+    app.run(debug=True)

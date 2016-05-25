@@ -140,6 +140,23 @@ body {
             });
         }
 
+        function addCollab(_proj_id) {
+            console.log("added collaborater to: ", _proj_id);
+            $.ajax({
+                url: '/incNumCollab/' + _proj_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+
+        }
+
         function cancelReq(_request_id) {
             console.log("Canceled request: ", _request_id);
             $.ajax({
@@ -147,6 +164,7 @@ body {
                 type: 'POST',
                 success:function(response) {
                     console.log(response);
+                    console.log("deleted");
                     location.reload();
                     
                 },
@@ -174,6 +192,7 @@ body {
                     var _type = "accept";
 
                     addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
+                    addCollab(_proj_id);
                     
                 },
                 error:function(error){
@@ -215,6 +234,7 @@ body {
                 url: '/addNotification/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
                 type: 'POST',
                 success:function(response) {
+                    console.log("hello, hello, success with notifications")
                     console.log(response);
                     cancelReq(_request_id);
                  
