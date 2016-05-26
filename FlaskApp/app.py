@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
 app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -808,6 +808,7 @@ def getAllProjects():
                         'Like':proj[10], 
                         'HasLiked':proj[11]}
                 project_full_info[proj[0]] = proj_dict
+
             
             con2 = mysql.connect()
             cursor2 = con2.cursor()
@@ -948,7 +949,6 @@ def incNumCollab(_proj_id):
         conn.close()
 
 
-<<<<<<< HEAD
 @app.route('/makeInactive/<_proj_id>', methods=['POST'])
 def makeInactive(_proj_id):
     try:
@@ -960,7 +960,13 @@ def makeInactive(_proj_id):
             result = cursor.fetchall()
             print result
             return json.dumps([])
-=======
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
 @app.route('/addCollab/<_proj_id>/<_user_id>', methods=['POST'])
 def addCollab(_proj_id, _user_id):
     try:
@@ -971,7 +977,7 @@ def addCollab(_proj_id, _user_id):
             result = cursor.fetchall()
             print result
             return json.dumps(result)
->>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
+
     except Exception as e:
         return render_template('error.html',error = str(e))
     finally:
@@ -979,11 +985,6 @@ def addCollab(_proj_id, _user_id):
         cursor.close()
         conn.close()
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
 
 
 

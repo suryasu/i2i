@@ -31,7 +31,6 @@ body {
                     success:function(response) {
                     // console.log(response);
                     var data = JSON.parse(response);
-
                     for (var i = 0; i <data.length; i++) {
                         var _request_id = data[i]["ID"];
                         var _sender_id = data[i]["RequesterID"];
@@ -60,7 +59,6 @@ body {
                     var reqdiv = $('<div>').attr('class', 'da-slider');
                     reqdiv.append(
                             "<div class = da-slide>"
-
                                 +"<p>"
                                     + userName
                                     + " requests to join your project: "
@@ -73,13 +71,11 @@ body {
                     reqdiv.append(+"</div>");
                     incomdiv.append(reqdiv);
                     $('#incomWell').append(incomdiv);
-
                     
                 }
         
             });
         }
-
         function displaySentRequests(user_id, _project_title, _request_id) {
             $.ajax({
                 url:'/getUserNameById/' + user_id,
@@ -93,7 +89,6 @@ body {
                     var reqdiv = $('<div>').attr('class', 'da-slider');
                     reqdiv.append(
                             "<div class = da-slide>"
-
                                 +"<p>"
                                     + "You requested to join "
                                     + userName
@@ -103,7 +98,6 @@ body {
        
                         );
                     reqdiv.append("<button type='button' onclick=cancelReq(" + _request_id + ")>Cancel request</button></p>");
-
                     reqdiv.append(+"</div>");
                     sentdiv.append(reqdiv);
                     $('#sentWell').append(sentdiv);
@@ -113,7 +107,6 @@ body {
         
             });
         }
-
         function getSentRequests() {
             // body...
             $.ajax({
@@ -122,14 +115,12 @@ body {
                 success:function(response) {
                     // console.log(response);
                     var data = JSON.parse(response);
-
                     for (var i = 0; i <data.length; i++) {
                         var _request_id = data[i]["ID"];
                         // console.log(_request_id);
                         var _owner_id = data[i]["OwnerID"];
                         var _project_title = data[i]["ProjectTitle"];
                         displaySentRequests(_owner_id, _project_title, _request_id);
-
             
                     }
                     
@@ -139,7 +130,6 @@ body {
                 }
             });
         }
-
         function addCollab(_proj_id) {
             console.log("added collaborater to: ", _proj_id);
             $.ajax({
@@ -154,16 +144,14 @@ body {
                     console.log(error);
                 }
             });
-
         }
 
         function checkInactive(_proj_id) {
-            console.log("checking if active: ", _proj_id);
+            console.log("added collaborater to: ", _proj_id);
             $.ajax({
                 url: '/makeInactive/' + _proj_id,
                 type: 'POST',
                 success:function(response) {
-                    console.log('jahskdhkdj');
                     console.log(response);
                     location.reload();
                     
@@ -172,7 +160,6 @@ body {
                     console.log(error);
                 }
             });
-
         }
 
         function cancelReq(_request_id) {
@@ -191,7 +178,6 @@ body {
                 }
             });
         }
-
         function acceptReq(_request_id) {
             
             console.log("Accept request: ", _request_id);
@@ -209,15 +195,10 @@ body {
                     var _proj_title = data[0]["ProjTitle"];
                     var _type = "accept";
 
-<<<<<<< HEAD
-                    checkInactive(_proj_id);
-                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
-=======
->>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
-                    addCollab(_proj_id);
+                    
+
                     addCollaborator(_proj_id, _user_id);
                     addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
-                    
                     
                 },
                 error:function(error){
@@ -225,7 +206,6 @@ body {
                 }
             });
         }
-
         function declineReq(_request_id) {
             console.log("Declined request: ", _request_id);
             // Get information about request
@@ -242,7 +222,6 @@ body {
                     var _proj_id = data[0]["ProjID"];
                     var _proj_title = data[0]["ProjTitle"];
                     var _type = "decline";
-
                     addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
                     
                 },
@@ -252,14 +231,13 @@ body {
             });
             
         }
-
         function addNotification(_request_id, _user_id, _sender_id, _proj_id, _proj_title, _type) {
             // body...
             $.ajax({
                 url: '/addNotification/' + _request_id + '/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
                 type: 'POST',
                 success:function(response) {
-                    console.log("hello, hello, success with notifications");
+                    console.log("hello, hello, success with notifications")
                     console.log(response);
                     cancelReq(_request_id);
                  
@@ -270,7 +248,6 @@ body {
                 }
             });
         }
-
         function getNotifications(_user_id) {
             // body...
             $.ajax({
@@ -279,8 +256,6 @@ body {
                 success:function(response) {
                     console.log(response);
                     var data = JSON.parse(response);
-
-
                     for (var i = 0; i <data.length; i++) {
                         var _notif_id = data[i]["NotifID"];
                         // console.log(_request_id);
@@ -291,7 +266,6 @@ body {
                         console.log(_project_title)
                         var _notif_type = data[i]["NotifType"];
                         displayNotifications(_sender_id, _project_title, _notif_type, _notif_id);
-
             
                     }
                     
@@ -301,7 +275,6 @@ body {
                 }
             });
         }
-
         function displayNotifications(_sender_id, _project_title, _notif_type, _notif_id) {
             // body...
             var type = _notif_type;
@@ -320,11 +293,9 @@ body {
             var notdiv = $('<div>').attr('class', 'da-slider');
                     notdiv.append(notif);
                     notdiv.append("<button type='button' onclick=deleteNotif(" + _notif_id + ")>Mark as Seen</button></p>");
-
                     // reqdiv.append(+"</div>");
                     notifdiv.append(notdiv);
                     $('#notifWell').append(notifdiv);
-
             
         }
         function deleteNotif(_notif_id) {
@@ -343,7 +314,6 @@ body {
                 }
             });
         }
-
         function addCollaborator(_proj_id, _user_id) {
             $.ajax({
                 url: '/addCollab/' + _proj_id + '/' + _user_id,
@@ -351,6 +321,8 @@ body {
                 success:function(response) {
                     console.log("added collaborater ", _user_id, " to project ", _proj_id);
                     console.log(response);
+                    addCollab(_proj_id);
+                    checkInactive(_proj_id);
                     
                 },
                 error:function(error){
@@ -358,7 +330,6 @@ body {
                 }
             });
         }
-
     </script>
  
     <div class="container">
