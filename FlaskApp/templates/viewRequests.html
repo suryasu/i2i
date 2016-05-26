@@ -256,7 +256,7 @@ body {
         function addNotification(_request_id, _user_id, _sender_id, _proj_id, _proj_title, _type) {
             // body...
             $.ajax({
-                url: '/addNotification/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
+                url: '/addNotification/' + _request_id + '/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
                 type: 'POST',
                 success:function(response) {
                     console.log("hello, hello, success with notifications");

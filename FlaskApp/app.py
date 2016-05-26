@@ -196,6 +196,7 @@ def projectHome():
     _proj_id = request.args.get('proj_id')
     print "Proj id: " + _proj_id
     if session.get('user'):
+        print 'ueser'
         _user = session.get('user')
         con = mysql.connect()
         cursor = con.cursor()
@@ -203,7 +204,19 @@ def projectHome():
         data = cursor.fetchall()
         if data[0][0] == _user:
             return render_template('projectHomeNoJoin.html')
-    
+            
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_GetRequestByProject',(_proj_id,))
+        data = cursor.fetchall()
+        for val in data:
+            if _user == val[0]:
+                return render_template('projectHomeNoJoin.html')  
+        cursor.close()
+        con.close()
+    else:
+        return render_template('projectHomeJoinSignUp.html')            
+
     return render_template('projectHome.html')
 
 @app.route('/createProject')
@@ -897,10 +910,11 @@ def addRequest(_owner_id, _proj_id, _title):
         conn.close()
 
 
-@app.route('/addNotification/<_user_id>/<_sender_id>/<_proj_id>/<_title>/<_type>', methods=['POST'])
-def addNotification(_user_id, _sender_id, _proj_id, _title, _type):
+@app.route('/addNotification/<_request_id>/<_user_id>/<_sender_id>/<_proj_id>/<_title>/<_type>', methods=['POST'])
+def addNotification(_request_id, _user_id, _sender_id, _proj_id, _title, _type):
     try:
         if session.get('user'):
+            deleteRequest(_request_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             # cursor.callproc('sp_addNotification', (500, 500, 500, "bleh", "decline"))

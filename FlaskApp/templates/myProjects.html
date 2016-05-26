@@ -37,9 +37,9 @@ body {
                     for(var i=0;i<data.length;i++){
                         console.log(data[i].Title);
                         projId = data[i].Id;
-                        
+
                         if(itemsPerRow<3){
-                            console.log(i);
+                            // console.log(i);
                             if(i==data.length-1){
                                 div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                                 $('#OwnerWell').append(div);
@@ -50,7 +50,7 @@ body {
                             }
                         }
                         else{
-                            $('OwnerWell').append(div);
+                            $('#OwnerWell').append(div);
                             div = $('<div>').attr('class','row');
                             div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                             if(i==data.length-1){
@@ -152,13 +152,14 @@ body {
                 url: '/getCollabProjs',
                 type: 'GET',
                 success:function(response) {
-                    console.log(response);
+                    
                     var data = JSON.parse(response);
-                    console.log(data);
+                    var div = $('<div>').attr('class','row');
+
                     for (var i = 0; i < data.length; i++) {
-                        console.log(data[i]);
+                        // console.log(data[i]);
                         var _proj_id = data[i];
-                        getProjById(_proj_id);
+                        getProjById(_proj_id, div);
 
                     }
                     // console.log(data[0]);
@@ -167,14 +168,41 @@ body {
             });
         }
 
-        function getProjById(_proj_id) {
+        function getProjById(_proj_id, div) {
             $.ajax({
                 url: '/getProjById/' + _proj_id,
                 type: 'GET',
                 success:function(response) {
                     // console.log(response);
                     var data = JSON.parse(response);
-                    console.log(data);
+                    // console.log(data);
+                    itemsPerRow = 0;
+
+                    for (var i = 0; i < data.length; i++) {
+                                        // data = data[i];
+                        if(itemsPerRow<3){
+                            if(i==data.length-1){
+                                div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                                $('#CollabWell').append(div);
+                            }
+                            else{
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                            itemsPerRow++;
+                            }
+
+                        }
+                        else{
+                            $('OwnerWell').append(div);
+                            div = $('<div>').attr('class','row');
+                            div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
+                            if(i==data.length-1){
+                                $('#OwnerWell').append(div);
+                            }
+                            itemsPerRow = 0;
+                        }
+
+
+                    }
           
                     // console.log(data[0]);
                     // console.log(data[1]);
@@ -229,7 +257,7 @@ body {
 
 </div>
 <h3>Projects -Collaborator</h3>
-<div class="well" id="OwnerWell">
+<div class="well" id="CollabWell">
 
 </div>
     
