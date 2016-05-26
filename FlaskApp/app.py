@@ -196,6 +196,7 @@ def projectHome():
     _proj_id = request.args.get('proj_id')
     print "Proj id: " + _proj_id
     if session.get('user'):
+        print 'ueser'
         _user = session.get('user')
         con = mysql.connect()
         cursor = con.cursor()
@@ -210,9 +211,12 @@ def projectHome():
         data = cursor.fetchall()
         for val in data:
             if _user == val[0]:
-                return render_template('projectHomeNoJoin.html')                
-    cursor.close()
-    con.close()
+                return render_template('projectHomeNoJoin.html')  
+            cursor.close()
+            con.close()
+    else:
+        return render_template('projectHomeJoinSignUp.html')            
+
     return render_template('projectHome.html')
 
 @app.route('/createProject')
