@@ -203,19 +203,6 @@ def projectHome():
         data = cursor.fetchall()
         if data[0][0] == _user:
             return render_template('projectHomeNoJoin.html')
-    # con = mysql.connect()
-    # cursor = con.cursor()
-    # cursor.callproc('sp_GetClickedProject',(_proj_id,))
-
- 
-    # projects_dict = []
-
-    #for proj in myprojects:
-    #    print proj
-        #if proj['Id'] == _proj_id:
-        #    print 'here'
- 
-    # return json.dumps(projects_dict)
     
     return render_template('projectHome.html')
 
