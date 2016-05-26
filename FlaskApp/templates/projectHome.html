@@ -59,6 +59,7 @@
                     userId = projObj[0]["UserId"];
                     console.log(userId);
                     userName = getUserName(userId);
+                    getCollaborators(id);
        
                     
                     },
@@ -70,7 +71,7 @@
 
         function getUserName(user_id) {
             $.ajax({
-                url:'/getUserNameById/' + userId,
+                url:'/getUserNameById/' + user_id,
                 type: 'GET',
                 success: function(response) {
                             //
@@ -79,6 +80,7 @@
                     console.log("GET USER NAME")
                     console.log(userName);
                     DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName, user_id);
+                    // getCollaborators(id);
 
                     
                 }
@@ -104,8 +106,6 @@
                         .attr('class', 'da-slider')
                         .attr('class','row');
                     div.append(AddImage(filepath));
-                    console.log("user id");
-                    console.log(user_id);
                     var html = '<div class="da-slide"> <h2>'
                     var html2 = '</h2> <p>Some description</p> </div>'
                     // var creator = "Creator: " + userName;
@@ -119,30 +119,30 @@
                                   +title
                              +"</h2>"
                              +"<p>"
-                                +"Created By: "
+                                +"<b>Created By: </b>"
                                 + "<a id = user_name href='#'>"
                                 + userName
                                 + "</a>"
                              +"</p>");
                     // div.append(name);
                     div.append("<p>"
-                                +"Category: "
+                                +"<b>Category: </b>"
                                 + category
                              +"</p>"
                              +"<p>"
-                                +"Desired Number of Collaborators: "
+                                +"<b>Desired Number of Collaborators: </b>"
                                 + numCollaborators
                              +"</p>"
                              +"<p>"
-                                +"Expected Completion Time: "
+                                +"<b>Expected Completion Time: </b>"
                                 + completionTime
                              +"</p>"
                              +"<p>"
-                                +"Description: "
+                                +"<b>Description: </b>"
                                 + description
                              +"</p>"
                              +"<p>"
-                                +"Tags: "
+                                +"<b>Tags: </b>"
                                 + tags
                              +"</p>"
                         +"</div>"
@@ -153,6 +153,72 @@
                         console.log("clicked name");
                         window.location.href = '/userProfile?user_id=' + user_id;
                     });
+        }
+
+        function getCollaborators(_proj_id) {
+            $.ajax({
+                url:'/getCollabsByProj/' + _proj_id,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data  = JSON.parse(response);
+                    var div = $('<div>').attr('class', 'da-slider');
+                    for (var i = 0; i < data.length; i++) {
+                        _user_id = data[i];
+                        getCollabName(_user_id);
+
+                    }
+                    
+                }
+        
+            });
+        }
+        function getCollabName(_user_id) {
+            // body...
+            $.ajax({
+                url:'/getUserNameById/' + _user_id,
+                type: 'GET',
+                success: function(response) {
+                    var data  = JSON.parse(response);
+                    userName = data[0][0];
+                    console.log("GET COLLAB NAME")
+                    console.log(userName);
+                    displayCollaborators(userName, _user_id)
+                    // //         //
+                    // // var data  = JSON.parse(response);
+                    // var div = $('<div>').attr('class', 'da-slider');
+                    // div.append(
+                    //     "<div class = da-slide>");
+                    // for (var i = 0; i < data.length; i++) {
+                    //     _user_name = data[i][0];
+                    //     console.log(_user_name);
+                    //     // div.append("<p>" + _user_name +"</p>");
+                    //     // div.append("<a id = collab_name href='#'>"
+                    //     //         + _user_name
+                    //     //         + "</a>")
+                    //     div.append("<a id =asdf href='#'>"
+                    //             + _user_name
+                    //             + "</a>")
+                    // }
+                    // div.append("</div>");
+                    // $('#collabs').append(div);
+                    
+                }
+            });
+        }
+
+        function displayCollaborators(userName, _user_id) {
+            // body...
+            var div = $('<div>').attr('class', 'da-slider');
+            div.append("<a id =asdf href='#'>"
+                                + userName
+                                + "</a>");
+            $('#collabs').append(div);
+            $('#asdf').click(function() {
+                console.log("clicked name");
+                window.location.href = '/userProfile?user_id=' + _user_id;
+            });
+
         }
 
         $(document).ready(function(){
@@ -172,9 +238,7 @@
 
             })
         });
-        
 
-  
 
     </script>
 
@@ -203,7 +267,10 @@ body {
  
       <!-- <div class="jumbotron"> -->
       <form class="form-horizontal" method="post" action="/showSignUp">
+      <h3>Project Info</h3>
       <div id="projInfo" class="well"> </div>
+      <h4>Collaborators</h4>
+      <div id="collabs" class="well"> </div>
       <div class="well">
         <p> Are you interested in working on this project? Request to join the team.</p>
         <button id="joinBtn" type="button" class="btn btn-default">Join</button>

@@ -633,6 +633,21 @@ def getCollabProjs():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+
+@app.route('/getCollabsByProj/<_proj_id>')
+def getCollabByProj(_proj_id):
+    try:
+        if session.get('user'):
+
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetCollabsByProj', (_proj_id,))
+            result = cursor.fetchall()
+ 
+            return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/getProjById/<_proj_id>')
 def getProjById(_proj_id):
     try:
