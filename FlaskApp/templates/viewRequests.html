@@ -29,12 +29,17 @@ body {
                     url: '/getIncomRequests',
                     type: 'GET',
                     success:function(response) {
-                    // console.log(response);
+                    // console.log("get incom requests");
                     var data = JSON.parse(response);
+                    // console.log(data);
                     for (var i = 0; i <data.length; i++) {
                         var _request_id = data[i]["ID"];
+
                         var _sender_id = data[i]["RequesterID"];
                         var _project_title = data[i]["ProjectTitle"];
+                        console.log(_request_id);
+                        console.log(_sender_id);
+                        console.log(_project_title);
                         displayIncomingRequests(_sender_id, _project_title, _request_id);
         
                     }
@@ -51,7 +56,7 @@ body {
                 url:'/getUserNameById/' + user_id,
                 type: 'GET',
                 success: function(response) {
-                            //
+                    // console.log("display incoming requests");
                     var data2  = JSON.parse(response);
                     userName = data2[0][0];
         
@@ -101,7 +106,7 @@ body {
                     reqdiv.append(+"</div>");
                     sentdiv.append(reqdiv);
                     $('#sentWell').append(sentdiv);
-                    getNotifications();
+                    // getNotifications();
                     
                 }
         
@@ -113,6 +118,7 @@ body {
                 url: '/getSentRequests',
                 type: 'GET',
                 success:function(response) {
+                    // console.log("get sent requests");
                     // console.log(response);
                     var data = JSON.parse(response);
                     for (var i = 0; i <data.length; i++) {
@@ -123,6 +129,7 @@ body {
                         displaySentRequests(_owner_id, _project_title, _request_id);
             
                     }
+                    getNotifications();
                     
                 },
                 error:function(error){
@@ -248,22 +255,24 @@ body {
                 }
             });
         }
-        function getNotifications(_user_id) {
+        function getNotifications() {
             // body...
             $.ajax({
                 url: '/getNotifications',
                 type: 'GET',
                 success:function(response) {
-                    console.log(response);
+    
+                    // console.log(response);
                     var data = JSON.parse(response);
                     for (var i = 0; i <data.length; i++) {
+                        // console.log(data[i]);
                         var _notif_id = data[i]["NotifID"];
                         // console.log(_request_id);
                         var _user_id = data[i]["UserID"];
                         var _sender_id = data[i]["SenderID"];
                         var _proj_id= data[i]["ProjectID"];
                         var _project_title = data[i]["ProjectTitle"];
-                        console.log(_project_title)
+                        // console.log(_project_title)
                         var _notif_type = data[i]["NotifType"];
                         displayNotifications(_sender_id, _project_title, _notif_type, _notif_id);
             
