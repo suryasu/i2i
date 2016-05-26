@@ -212,8 +212,8 @@ def projectHome():
         for val in data:
             if _user == val[0]:
                 return render_template('projectHomeNoJoin.html')  
-            cursor.close()
-            con.close()
+        cursor.close()
+        con.close()
     else:
         return render_template('projectHomeJoinSignUp.html')            
 
@@ -910,10 +910,11 @@ def addRequest(_owner_id, _proj_id, _title):
         conn.close()
 
 
-@app.route('/addNotification/<_user_id>/<_sender_id>/<_proj_id>/<_title>/<_type>', methods=['POST'])
-def addNotification(_user_id, _sender_id, _proj_id, _title, _type):
+@app.route('/addNotification/<_request_id>/<_user_id>/<_sender_id>/<_proj_id>/<_title>/<_type>', methods=['POST'])
+def addNotification(_request_id, _user_id, _sender_id, _proj_id, _title, _type):
     try:
         if session.get('user'):
+            deleteRequest(_request_id)
             conn = mysql.connect()
             cursor = conn.cursor()
             # cursor.callproc('sp_addNotification', (500, 500, 500, "bleh", "decline"))
