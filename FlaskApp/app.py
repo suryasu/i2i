@@ -963,6 +963,19 @@ def incNumCollab(_proj_id):
         conn.close()
 
 
+<<<<<<< HEAD
+@app.route('/makeInactive/<_proj_id>', methods=['POST'])
+def makeInactive(_proj_id):
+    try:
+        if session.get('user'):
+            print "hi"
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_makeInactive', [_proj_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps([])
+=======
 @app.route('/addCollab/<_proj_id>/<_user_id>', methods=['POST'])
 def addCollab(_proj_id, _user_id):
     try:
@@ -973,6 +986,7 @@ def addCollab(_proj_id, _user_id):
             result = cursor.fetchall()
             print result
             return json.dumps(result)
+>>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
     except Exception as e:
         return render_template('error.html',error = str(e))
     finally:
@@ -980,6 +994,11 @@ def addCollab(_proj_id, _user_id):
         cursor.close()
         conn.close()
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
 
 
 

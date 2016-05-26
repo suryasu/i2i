@@ -157,6 +157,24 @@ body {
 
         }
 
+        function checkInactive(_proj_id) {
+            console.log("checking if active: ", _proj_id);
+            $.ajax({
+                url: '/makeInactive/' + _proj_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log('jahskdhkdj');
+                    console.log(response);
+                    location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+
+        }
+
         function cancelReq(_request_id) {
             console.log("Canceled request: ", _request_id);
             $.ajax({
@@ -191,9 +209,15 @@ body {
                     var _proj_title = data[0]["ProjTitle"];
                     var _type = "accept";
 
+<<<<<<< HEAD
+                    checkInactive(_proj_id);
+                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
+=======
+>>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
                     addCollab(_proj_id);
                     addCollaborator(_proj_id, _user_id);
                     addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
+                    
                     
                 },
                 error:function(error){
@@ -235,7 +259,7 @@ body {
                 url: '/addNotification/' + _request_id + '/' + _user_id + '/' + _sender_id + '/' + _proj_id + '/' + _proj_title +'/' + _type,
                 type: 'POST',
                 success:function(response) {
-                    console.log("hello, hello, success with notifications")
+                    console.log("hello, hello, success with notifications");
                     console.log(response);
                     cancelReq(_request_id);
                  
