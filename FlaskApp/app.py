@@ -616,6 +616,53 @@ def getMyProjects():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+@app.route('/getCollabProjs')
+def getCollabProjs():
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_getCollabProjsByUser', (_user,))
+            result = cursor.fetchall()
+ 
+            return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+@app.route('/getProjById/<_proj_id>')
+def getProjById(_proj_id):
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetProjById', (_proj_id,))
+            result = cursor.fetchall()
+            projects_dict = []
+            for proj in result:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'UserId': proj[7],
+                        'DateMade': proj[8],
+                        'FilePath': proj[9]}
+                projects_dict.append(proj_dict)     
+ 
+            return json.dumps(projects_dict)
+
+ 
+            # return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/getIncomRequests')
 def getIncomRequests():
     try:
@@ -897,6 +944,23 @@ def incNumCollab(_proj_id):
         cursor.close()
         conn.close()
 
+
+@app.route('/addCollab/<_proj_id>/<_user_id>', methods=['POST'])
+def addCollab(_proj_id, _user_id):
+    try:
+        if session.get('user'):
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addCollaborator', [_proj_id, _user_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
 
 
 

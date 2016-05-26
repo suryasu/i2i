@@ -42,7 +42,7 @@ body {
                             console.log(i);
                             if(i==data.length-1){
                                 div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
-                                $('.well').append(div);
+                                $('#OwnerWell').append(div);
                             }
                             else{
                             div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
@@ -50,16 +50,16 @@ body {
                             }
                         }
                         else{
-                            $('.well').append(div);
+                            $('OwnerWell').append(div);
                             div = $('<div>').attr('class','row');
                             div.append(CreateThumb(data[i].Id,data[i].Title,data[i].Category,data[i].CompletionTime,data[i].NumCollaborators,data[i].Description,data[i].Tags,data[i].DateMade,data[i].FilePath, data[i].Like,data[i].HasLiked));
                             if(i==data.length-1){
-                                $('.well').append(div);
+                                $('#OwnerWell').append(div);
                             }
                             itemsPerRow = 0;
                         }
                     }
-                    
+                    getCollabProjects();
                     },
                     error:function(error){
                         console.log(error);
@@ -144,9 +144,43 @@ body {
 
             mainDiv.append(thumbNail);
             return mainDiv;
- 
- 
-}
+        }
+
+        function getCollabProjects() {
+            // body...
+            $.ajax({
+                url: '/getCollabProjs',
+                type: 'GET',
+                success:function(response) {
+                    console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+                    for (var i = 0; i < data.length; i++) {
+                        console.log(data[i]);
+                        var _proj_id = data[i];
+                        getProjById(_proj_id);
+
+                    }
+                    // console.log(data[0]);
+                    // console.log(data[1]);
+                }
+            });
+        }
+
+        function getProjById(_proj_id) {
+            $.ajax({
+                url: '/getProjById/' + _proj_id,
+                type: 'GET',
+                success:function(response) {
+                    // console.log(response);
+                    var data = JSON.parse(response);
+                    console.log(data);
+          
+                    // console.log(data[0]);
+                    // console.log(data[1]);
+                }
+            });
+        }
     </script>
 
     <style>
@@ -190,8 +224,12 @@ body {
 
 
     
+<h3>Projects -Owner</h3>
+<div class="well" id="OwnerWell">
 
-<div class="well">
+</div>
+<h3>Projects -Collaborator</h3>
+<div class="well" id="OwnerWell">
 
 </div>
     

@@ -191,8 +191,9 @@ body {
                     var _proj_title = data[0]["ProjTitle"];
                     var _type = "accept";
 
-                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
                     addCollab(_proj_id);
+                    addCollaborator(_proj_id, _user_id);
+                    addNotification(_request_id, _user_id, _owner_id, _proj_id, _proj_title, _type);
                     
                 },
                 error:function(error){
@@ -311,6 +312,21 @@ body {
                 success:function(response) {
                     console.log(response);
                     location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function addCollaborator(_proj_id, _user_id) {
+            $.ajax({
+                url: '/addCollab/' + _proj_id + '/' + _user_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log("added collaborater ", _user_id, " to project ", _proj_id);
+                    console.log(response);
                     
                 },
                 error:function(error){
