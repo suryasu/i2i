@@ -18,7 +18,7 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'dolphin123'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
 app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -195,26 +195,15 @@ def projectHome():
     # Get project id from query string
     _proj_id = request.args.get('proj_id')
     print "Proj id: " + _proj_id
-    # con = mysql.connect()
-    # cursor = con.cursor()
-    # cursor.callproc('sp_GetClickedProject',(_proj_id,))
-    # myprojects = cursor.fetchall()
- 
-    # projects_dict = []
-    # for proj in myprojects:
-    #     proj_dict = {
-    #             'Id': proj[0],
-    #             'Title': proj[1],
-    #             'Category': proj[2],
-    #             'CompletionTime': proj[3],
-    #             'NumCollaborators': proj[4],
-    #             'Description': proj[5],
-    #             'Tags': proj[6],
-    #             'Date': proj[7],
-    #             'FilePath': proj[9]}
-    #     projects_dict.append(proj_dict)
- 
-    # return json.dumps(projects_dict)
+    if session.get('user'):
+        _user = session.get('user')
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_GetUserByProject',(_proj_id,))
+        data = cursor.fetchall()
+        if data[0][0] == _user:
+            return render_template('projectHomeNoJoin.html')
+    
     return render_template('projectHome.html')
 
 @app.route('/createProject')
@@ -616,6 +605,53 @@ def getMyProjects():
     except Exception as e:
         return render_template('error.html', error = str(e))
 
+@app.route('/getCollabProjs')
+def getCollabProjs():
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_getCollabProjsByUser', (_user,))
+            result = cursor.fetchall()
+ 
+            return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+@app.route('/getProjById/<_proj_id>')
+def getProjById(_proj_id):
+    try:
+        if session.get('user'):
+            
+            _user = session.get('user')
+            con = mysql.connect()
+            cursor = con.cursor()
+            cursor.callproc('sp_GetProjById', (_proj_id,))
+            result = cursor.fetchall()
+            projects_dict = []
+            for proj in result:
+                proj_dict = {
+                        'Id': proj[0],
+                        'Title': proj[1],
+                        'Category': proj[2],
+                        'CompletionTime': proj[3],
+                        'NumCollaborators': proj[4],
+                        'Description': proj[5],
+                        'Tags': proj[6],
+                        'UserId': proj[7],
+                        'DateMade': proj[8],
+                        'FilePath': proj[9]}
+                projects_dict.append(proj_dict)     
+ 
+            return json.dumps(projects_dict)
+
+ 
+            # return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
 @app.route('/getIncomRequests')
 def getIncomRequests():
     try:
@@ -898,6 +934,7 @@ def incNumCollab(_proj_id):
         conn.close()
 
 
+<<<<<<< HEAD
 @app.route('/makeInactive/<_proj_id>', methods=['POST'])
 def makeInactive(_proj_id):
     try:
@@ -909,6 +946,18 @@ def makeInactive(_proj_id):
             result = cursor.fetchall()
             print result
             return json.dumps([])
+=======
+@app.route('/addCollab/<_proj_id>/<_user_id>', methods=['POST'])
+def addCollab(_proj_id, _user_id):
+    try:
+        if session.get('user'):
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addCollaborator', [_proj_id, _user_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps(result)
+>>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
     except Exception as e:
         return render_template('error.html',error = str(e))
     finally:
@@ -916,8 +965,11 @@ def makeInactive(_proj_id):
         cursor.close()
         conn.close()
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
 
 
 
