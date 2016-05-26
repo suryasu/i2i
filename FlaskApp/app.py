@@ -898,6 +898,26 @@ def incNumCollab(_proj_id):
         conn.close()
 
 
+@app.route('/makeInactive/<_proj_id>', methods=['POST'])
+def makeInactive(_proj_id):
+    try:
+        if session.get('user'):
+            print "hi"
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_makeInactive', [_proj_id])
+            result = cursor.fetchall()
+            print result
+            return json.dumps([])
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
+
 
 
 
