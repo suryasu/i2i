@@ -11,11 +11,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addNotification`(
     IN p_notif_type varchar(255)
 )
 BEGIN
-    insert into tbl_requests(
+    insert into tbl_notifications(
         user_id,
         sender_id,
         proj_id,
-        proj_title.
+        proj_title,
         notif_type
         
     )
