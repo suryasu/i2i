@@ -195,26 +195,28 @@ def projectHome():
     # Get project id from query string
     _proj_id = request.args.get('proj_id')
     print "Proj id: " + _proj_id
+    if session.get('user'):
+        _user = session.get('user')
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_GetUserByProject',(_proj_id,))
+        data = cursor.fetchall()
+        if data[0][0] == _user:
+            return render_template('projectHomeNoJoin.html')
     # con = mysql.connect()
     # cursor = con.cursor()
     # cursor.callproc('sp_GetClickedProject',(_proj_id,))
-    # myprojects = cursor.fetchall()
+
  
     # projects_dict = []
-    # for proj in myprojects:
-    #     proj_dict = {
-    #             'Id': proj[0],
-    #             'Title': proj[1],
-    #             'Category': proj[2],
-    #             'CompletionTime': proj[3],
-    #             'NumCollaborators': proj[4],
-    #             'Description': proj[5],
-    #             'Tags': proj[6],
-    #             'Date': proj[7],
-    #             'FilePath': proj[9]}
-    #     projects_dict.append(proj_dict)
+
+    #for proj in myprojects:
+    #    print proj
+        #if proj['Id'] == _proj_id:
+        #    print 'here'
  
     # return json.dumps(projects_dict)
+    
     return render_template('projectHome.html')
 
 @app.route('/createProject')

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>i2i | Project Homepage</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/createproj.css" rel="stylesheet">
+    
+  </head>
+  <script src="../static/js/jquery-1.12.3.min.js"></script>
+  <script>
+        var id;
+        var title;
+        var category;
+        var completionTime;
+        var numCollaborators;
+        var description;
+        var filepath;
+        var userId;
+        var userName;
+        $.extend({
+          getUrlVars: function(){
+            var vars = [], hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+              hash = hashes[i].split('=');
+              vars.push(hash[0]);
+              vars[hash[0]] = hash[1];
+            }
+            return vars;
+          },
+          getUrlVar: function(name){
+            return $.getUrlVars()[name];
+          }
+        });
+        $(function(){
+            id = $.getUrlVar('proj_id');
+          console.log(id);
+            // Store project Id to be used as query string
+            var projId;
+                $.ajax({
+                    url: '/getClickedProject?proj_id=' + id,
+                    type: 'GET',
+                    success:function(response) {
+                    console.log(response);
+                    var projObj = JSON.parse(response);
+                    // console.log(projObj);
+                    title = projObj[0]["Title"];
+                    category = projObj[0]["Category"];
+                    numCollaborators = projObj[0]["NumCollaborators"];
+                    completionTime = projObj[0]["CompletionTime"];
+                    description = projObj[0]["Description"];
+                    tags = projObj[0]["Tags"];
+                    filepath = projObj[0]["FilePath"];
+                    userId = projObj[0]["UserId"];
+                    console.log(userId);
+                    userName = getUserName(userId);
+       
+                    
+                    },
+                    error:function(error){
+                        console.log(error);
+                    }
+                });
+        })
+
+        function getUserName(user_id) {
+            $.ajax({
+                url:'/getUserNameById/' + userId,
+                type: 'GET',
+                success: function(response) {
+                            //
+                    var data2  = JSON.parse(response);
+                    userName = data2[0][0];
+                    console.log("GET USER NAME")
+                    console.log(userName);
+                    DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName, user_id);
+
+                    
+                }
+        
+            });
+        }
+        function AddImage(filepath) {
+            var mainDiv = $('<div>').attr('class', 'col-sm-4 col-md-4');
+            var image = $('<div>').attr('class', 'da-image');
+            var img = $('<img>').attr({
+                'src': filepath,
+                'data-holder-rendered': true,
+                'style': 'height: 150px; width: 150px; display: block'
+            });
+ 
+            image.append(img);
+            mainDiv.append(image);
+            return mainDiv;
+        }
+        function DisplayProj(title, category, numCollaborators, completionTime, description, tags, filepath, userName, user_id) {
+          // body...
+          var div = $('<div>')
+                        .attr('class', 'da-slider')
+                        .attr('class','row');
+                    div.append(AddImage(filepath));
+                    console.log("user id");
+                    console.log(user_id);
+                    var html = '<div class="da-slide"> <h2>'
+                    var html2 = '</h2> <p>Some description</p> </div>'
+                    // var creator = "Creator: " + userName;
+                    // var name = $('<p>').text(creator);
+                    // var link = "<a href='/userProfile?user_id='" + user_id + ">"
+                    // console.log(link);
+
+                    div.append(
+                        "<div class = da-slide>"
+                             +"<h2>"
+                                  +title
+                             +"</h2>"
+                             +"<p>"
+                                +"Created By: "
+                                + "<a id = user_name href='#'>"
+                                + userName
+                                + "</a>"
+                             +"</p>");
+                    // div.append(name);
+                    div.append("<p>"
+                                +"Category: "
+                                + category
+                             +"</p>"
+                             +"<p>"
+                                +"Desired Number of Collaborators: "
+                                + numCollaborators
+                             +"</p>"
+                             +"<p>"
+                                +"Expected Completion Time: "
+                                + completionTime
+                             +"</p>"
+                             +"<p>"
+                                +"Description: "
+                                + description
+                             +"</p>"
+                             +"<p>"
+                                +"Tags: "
+                                + tags
+                             +"</p>"
+                        +"</div>"
+                    );
+                    
+                    $('#projInfo').append(div);
+                    $('#user_name').click(function() {
+                        console.log("clicked name");
+                        window.location.href = '/userProfile?user_id=' + user_id;
+                    });
+        }
+
+        $(document).ready(function(){
+            $('#joinBtn').click(function() {
+                $("#joinBtn").text('Request Sent!');
+
+                $.ajax({
+                    url: '/addRequest/' + userId + '/' + id + '/' + title,
+                    type: 'POST',
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(error) {
+                    console.log(error);
+                    }
+                });
+
+            })
+        });
+        
+
+  
+
+    </script>
+
+<style>
+body {
+    background-image: url("http://www.atpilgrimage.com/wp-content/uploads/2015/02/team-building-corporate-singapore-1024x862.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+   -moz-background-size: cover;
+   -o-background-size: cover;
+   -webkit-background-size: cover;
+}
+</style>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="/">Home</a></li>
+            <li role="presentation"><a href="/userHome">User Home</a></li>
+            <li role="presentation" ><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Project Homepage</h3>
+      </div>
+ 
+      <!-- <div class="jumbotron"> -->
+      <form class="form-horizontal" method="post" action="/showSignUp">
+      <div id="projInfo" class="well"> </div>
+     
+      </form>
+<!--       </div> -->
+ 
+       
+ 
+      <footer class="footer">
+        <p>&copy; i2i 2016</p>
+      </footer>
+ 
+    </div>
+  </body>
+</html>
