@@ -203,7 +203,16 @@ def projectHome():
         data = cursor.fetchall()
         if data[0][0] == _user:
             return render_template('projectHomeNoJoin.html')
-    
+            
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_GetRequestByProject',(_proj_id,))
+        data = cursor.fetchall()
+        for val in data:
+            if _user == val[0]:
+                return render_template('projectHomeNoJoin.html')                
+    cursor.close()
+    con.close()
     return render_template('projectHome.html')
 
 @app.route('/createProject')
