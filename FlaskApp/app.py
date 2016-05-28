@@ -196,7 +196,6 @@ def projectHome():
     _proj_id = request.args.get('proj_id')
     print "Proj id: " + _proj_id
     if session.get('user'):
-        print 'ueser'
         _user = session.get('user')
         con = mysql.connect()
         cursor = con.cursor()
@@ -211,7 +210,19 @@ def projectHome():
         data = cursor.fetchall()
         for val in data:
             if _user == val[0]:
+                return render_template('projectHomeRequestSent.html')  
+
+        con = mysql.connect()
+        cursor = con.cursor()
+        cursor.callproc('sp_GetCollabsByProj',(_proj_id,))
+        data = cursor.fetchall()
+        for val in data:
+            print val[0]
+            print _user
+            if val[0] == session.get('user'):
+                print "plspls"
                 return render_template('projectHomeNoJoin.html')  
+
         cursor.close()
         con.close()
     else:
@@ -656,7 +667,7 @@ def getProjById(_proj_id):
             _user = session.get('user')
             con = mysql.connect()
             cursor = con.cursor()
-            cursor.callproc('sp_GetProjById', (_proj_id,))
+            cursor.callproc('sp_GetProjById', (_proj_id, _user))
             result = cursor.fetchall()
             projects_dict = []
             for proj in result:
@@ -670,7 +681,9 @@ def getProjById(_proj_id):
                         'Tags': proj[6],
                         'UserId': proj[7],
                         'DateMade': proj[8],
-                        'FilePath': proj[9]}
+                        'FilePath': proj[9], 
+                        'Like':proj[10], 
+                        'HasLiked':proj[11]}
                 projects_dict.append(proj_dict)     
  
             return json.dumps(projects_dict)
