@@ -842,6 +842,9 @@ def getAllProjects():
             cursor2 = con2.cursor()
             cursor2.callproc('sp_GetSkillsByUser', (_user,))
             skills = cursor2.fetchall()[0]
+            print 'checking empty'
+            print skills
+            print len(skills)
             ranks = {}
             for key, value in tags_dict.iteritems():
                 ranks[key] = matches(value, skills)
