@@ -206,7 +206,7 @@
         $(document).ready(function(){
             $('#joinBtn').click(function() {
                 $("#joinBtn").text('Request Sent!');
-
+				//$("#joinBtn").attr("disabled", "disabled");
                 $.ajax({
                     url: '/addRequest/' + userId + '/' + id + '/' + title,
                     type: 'POST',
