@@ -894,10 +894,18 @@ def addUpdateLike():
  
             conn = mysql.connect()
             cursor = conn.cursor()
+            # cursor.callproc('sp_UpdateNumLikes',(_user,))
             cursor.callproc('sp_AddUpdateLikes',(_projectId,_user,_like))
             data = cursor.fetchall()
 
             if len(data) is 0:
+                conn.commit()
+                cursor.close()
+                conn.close()
+
+                conn = mysql.connect()
+                cursor = conn.cursor()
+                cursor.callproc('sp_UpdateNumLikes',(_user,))
                 conn.commit()
                 cursor.close()
                 conn.close()
@@ -931,6 +939,14 @@ def addRequest(_owner_id, _proj_id, _title):
             conn = mysql.connect()
             cursor = conn.cursor()
             cursor.callproc('sp_addRequest', (_user, _owner_id, _proj_id, _title))
+
+            conn.commit()
+            cursor.close()
+            conn.close()
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_IncNumJoins', (_user, ))
             print 'added'
             result = cursor.fetchall()
             print result
@@ -1037,6 +1053,26 @@ def deleteRequest(_request_id):
         conn.commit()
         cursor.close()
         conn.close()
+
+
+@app.route('/decNumJoins', methods=['POST'])
+def decNumJoins():
+    try:
+        if session.get('user'):
+            _user = session.get('user')
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_DecNumJoins', [_user])
+            result = cursor.fetchall()
+       
+            return json.dumps(result)
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        conn.commit()
+        cursor.close()
+        conn.close()
+
 
 @app.route('/deleteNotification/<_notif_id>', methods=['POST'])
 def deleteNotification(_notif_id):
@@ -1268,6 +1304,8 @@ def getUserInfo(_user_id):
 
     except Exception as e:
         return render_template('error.html', error = str(e))
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

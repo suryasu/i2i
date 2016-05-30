@@ -177,6 +177,43 @@ body {
                 success:function(response) {
                     console.log(response);
                     console.log("deleted");
+                    decNumJoins();
+
+                    // location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function decNumJoins() {
+            console.log("decremented ");
+            $.ajax({
+                url: '/decNumJoins',
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    console.log("a;lkf;als");
+
+                    // location.reload();
+                    
+                },
+                error:function(error){
+                    console.log(error);
+                }
+            });
+        }
+
+        function deleteReq(_request_id) {
+            console.log("Deleted request: ", _request_id);
+            $.ajax({
+                url: '/deleteRequest/' + _request_id,
+                type: 'POST',
+                success:function(response) {
+                    console.log(response);
+                    console.log("deleted");
                     location.reload();
                     
                 },
@@ -246,7 +283,7 @@ body {
                 success:function(response) {
                     console.log("hello, hello, success with notifications")
                     console.log(response);
-                    cancelReq(_request_id);
+                    deleteReq(_request_id);
                  
                     
                 },

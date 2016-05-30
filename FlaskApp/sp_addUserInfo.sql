@@ -11,7 +11,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addUserInfo`(
     IN p_file_path varchar(200)
 )
 BEGIN
-    insert into tbl_user_info(
+    replace into tbl_user_info(
         user_id,
         user_age,
         user_education,
