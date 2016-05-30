@@ -216,9 +216,55 @@
 
                     langdiv.append(+"</div>");
                     $('#langWell').append(langdiv);
+                    getUserInfo(user_id);
+
                 }
             })
     }
+
+    function getUserInfo(user_id) {
+        // body...
+        $.ajax({
+            url: '/getUserInfo/' + user_id,
+            type: 'GET',
+            success:function(response) {
+                console.log(response);
+                var data = JSON.parse(response);
+                console.log(data);
+                var _age = data[0]["Age"];
+                var _description = data[0]["Description"];
+                var _education = data[0]["Education"];
+                var _filepath = data[0]["FilePath"]
+                var img = $('<img>').attr({
+                    'src': _filepath,
+                    'data-holder-rendered': true,
+                    'style': 'height: 200px; width: 200px; display: block'
+                });
+                $('#aboutWell').append(img);
+                var infodiv = $('<div>').attr('class','da-slider');
+                infodiv.append(
+                        "<div class = da-slide>"
+
+                             +"<p>"
+                                + "<b>Age: </b>"
+                                + _age
+                             +"</p>"
+                             +"<p>"
+                                + "<b>Education: </b>"
+                                + _education
+                             +"</p>"
+                             +"<p>"
+                                + "<b>Description: </b>"
+                                + _description
+                             +"</p>"
+        
+                    );
+                infodiv.append(+"</div>");
+                $('#aboutWell').append(infodiv);
+            }
+        });
+    }
+
   </script>
  
 <style>

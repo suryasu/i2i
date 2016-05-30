@@ -18,11 +18,8 @@ app.secret_key = 'why would I tell you my secret key?'
  
 # MySQL configurations
 app.config['MYSQL_DATABASE_USER'] = 'root'
-<<<<<<< HEAD
 app.config['MYSQL_DATABASE_PASSWORD'] = 'hihi1080'
-=======
-app.config['MYSQL_DATABASE_PASSWORD'] = 'jordanbonilla'
->>>>>>> origin/master
+
 app.config['MYSQL_DATABASE_DB'] = 'BucketList'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
@@ -469,7 +466,7 @@ def addLanguage():
 
             if len(data) is 0:
                 conn.commit()
-                return redirect('/userHome')
+                return redirect('/addAboutMe')
             else:
                 return render_template('error.html',error = 'An error occurred!')
 
@@ -1189,7 +1186,88 @@ def addAboutMe():
         return render_template('addAboutMe.html');
     else:
         return render_template('error.html',error = 'Unauthorized Access')
-    
+
+
+@app.route('/addUserInfo', methods=['POST'])
+def addUserInfo():
+    try:
+        if session.get('user'):
+            _age = request.form['inputAge']
+            _education = request.form['inputEducation']
+            _description = request.form['inputDescription']
+            _user = session.get('user')
+            if request.form.get('filePath') is None:
+                _filePath = ''
+            else:
+                _filePath = request.form.get('filePath')
+
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_addUserInfo',(_user, _age, _education, _description, _filePath))
+            data = cursor.fetchall()
+ 
+            if len(data) is 0:
+                conn.commit()
+                return redirect('/userHome')
+            else:
+                return render_template('error.html',error = 'An error occurred!')
+ 
+        else:
+            return render_template('error.html',error = 'Unauthorized Access')
+    except Exception as e:
+        return render_template('error.html',error = str(e))
+    finally:
+        cursor.close()
+        conn.close()
+
+@app.route('/getMyInfo/')
+def getMyInfo():
+    try:
+        if session.get('user'):
+            _user = session.get('user')
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            cursor.callproc('sp_getInfoByUser', (_user,))
+            result = cursor.fetchall()
+        
+            info_dict = []
+            for elem in result:
+                info = {
+                    'userId': elem[0],
+                    'Age': elem[1],
+                    'Education': elem[2],
+                    'Description': elem[3],
+                    'FilePath': elem[4]
+                }
+                info_dict.append(info)
+            return json.dumps(info_dict)
+
+    except Exception as e:
+        return render_template('error.html', error = str(e))
+
+
+@app.route('/getUserInfo/<_user_id>')
+def getUserInfo(_user_id):
+    try:
+        conn = mysql.connect()
+        cursor = conn.cursor()
+        cursor.callproc('sp_getInfoByUser', (_user_id,))
+        result = cursor.fetchall()
+        
+        info_dict = []
+        for elem in result:
+            info = {
+                'userId': elem[0],
+                'Age': elem[1],
+                'Education': elem[2],
+                'Description': elem[3],
+                'FilePath': elem[4]
+            }
+            info_dict.append(info)
+        return json.dumps(info_dict)
+
+    except Exception as e:
+        return render_template('error.html', error = str(e))
 
 if __name__ == "__main__":
     app.run(debug=True)

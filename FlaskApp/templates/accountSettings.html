@@ -30,6 +30,7 @@ body {
                     url: '/getMySkills',
                     type: 'GET',
                     success:function(response) {
+                    getUserInfo();
                     console.log(response);
                     var data = JSON.parse(response);
                     console.log(data);
@@ -149,6 +150,7 @@ body {
 
                     $('#skillWell').append(skilldiv);
                     $('#langWell').append(langdiv);
+
                     
                     },
                     error:function(error){
@@ -156,6 +158,53 @@ body {
                     }
                 });
         })
+    function getUserInfo() {
+        // body...
+         $.ajax({
+            url: '/getMyInfo',
+            type: 'GET',
+            success:function(response) {
+                //
+                console.log(response);
+                var data = JSON.parse(response);
+                console.log(data);
+                var _age = data[0]["Age"];
+                var _description = data[0]["Description"];
+                var _education = data[0]["Education"];
+                var _filepath = data[0]["FilePath"]
+                var img = $('<img>').attr({
+                    'src': _filepath,
+                    'data-holder-rendered': true,
+                    'style': 'height: 200px; width: 200px; display: block'
+                });
+                $('#infoWell').append(img);
+
+                var infodiv = $('<div>').attr('class','da-slider');
+                infodiv.append(
+                        "<div class = da-slide>"
+
+                             +"<p>"
+                                + "<b>Age: </b>"
+                                + _age
+                             +"</p>"
+                             +"<p>"
+                                + "<b>Education: </b>"
+                                + _education
+                             +"</p>"
+                             +"<p>"
+                                + "<b>Description: </b>"
+                                + _description
+                             +"</p>"
+        
+                    );
+                infodiv.append(+"</div>");
+                $('#infoWell').append(infodiv);
+
+    
+            }
+        })
+    }
+
 
     </script>
  
@@ -179,6 +228,10 @@ body {
       <div class="row marketing">
             <div class="col-lg-6">
             <h2><center>Account Settings</center></h2>
+            <h3>Info</h3>
+            <button id="editInfo" type="button" class="btn btn-default" onClick="window.location='/addAboutMe'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
+            <div class="well" id="infoWell">
+            </div>
             <h3>Skills</h3>
             <button id="editSkills" type="button" class="btn btn-default" onClick="window.location='/editSkills'"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
             <div class="well" id="skillWell">
