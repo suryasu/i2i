@@ -15,11 +15,7 @@ BEGIN
         user_id,
         sender_id,
         proj_id,
-<<<<<<< HEAD
         proj_title, 
-=======
-        proj_title,
->>>>>>> 4bb068846ed3b7a77e1183c27488d3d67118d724
         notif_type
         
     )
