@@ -114,9 +114,11 @@ var _userName;
                 'style': 'height: 150px; width: 150px; display: block'
             });
             var caption = $('<div>').attr('class', 'caption');
-            var title = $('<h3>').text(title);
+            var title = $('<h3>').text(title).attr({
+				'class': 'ellipsis'
+			});
             var desc = $('<p>').text(desc);
- 
+		
  
             var p = $('<p>');
             var btn = $('<button>').attr({
@@ -224,6 +226,12 @@ var _userName;
     cursor: inherit;
     display: block;
 }
+.ellipsis{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow:ellipsis;
+}
+
     </style>
    
   </head>
